@@ -2,34 +2,37 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#0e7a62">
 <title>Dosya Kasası</title>
 <style>
-:root{--bg:#f5f6f8;--cd:#fff;--bd:#e2e5ea;--tx:#15181c;--mu:#667080;--ac:#0e7a62;--ah:#0a6350;--ax:#fff;--as:#e4f4ee;--dn:#c0372b;--ds:#fdebe8;--sh:0 1px 2px rgba(16,24,40,.05),0 6px 20px rgba(16,24,40,.05)}
-[data-theme=dark]{--bg:#0d1012;--cd:#151a1d;--bd:#252c31;--tx:#e8ecef;--mu:#8995a0;--ac:#3ccaa4;--ah:#62dbbb;--ax:#05140f;--as:#10302a;--dn:#ff7d70;--ds:#3a1f1c;--sh:none}
-*{box-sizing:border-box;margin:0}
-body{background:var(--bg);color:var(--tx);font:14.5px/1.5 system-ui,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+:root{--bg:#f5f6f8;--cd:#fff;--bd:#e2e5ea;--tx:#15181c;--mu:#667080;--ac:#0e7a62;--ah:#0a6350;--ax:#fff;--as:#e4f4ee;--dn:#c0372b;--ds:#fdebe8;--sh:0 1px 2px rgba(16,24,40,.05),0 6px 20px rgba(16,24,40,.05);--sa:env(safe-area-inset-bottom,0px)}
+[data-theme=dark]{color-scheme:dark;--bg:#0d1012;--cd:#151a1d;--bd:#252c31;--tx:#e8ecef;--mu:#8995a0;--ac:#3ccaa4;--ah:#62dbbb;--ax:#05140f;--as:#10302a;--dn:#ff7d70;--ds:#3a1f1c;--sh:none}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--tx);font:14.5px/1.5 system-ui,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100dvh;overflow-x:hidden}
 .hide{display:none!important}
-.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd)}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--bd);padding-top:env(safe-area-inset-top,0px)}
+@supports(color:color-mix(in srgb,red,blue)){.top{background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}}
 .in{max-width:1000px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:10px}
 .logo{font-weight:700;font-size:16px;display:flex;align-items:center;gap:9px}
 .mk{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--ac);color:var(--ax)}
 .sp{flex:1}
 .chip{font-size:12.5px;color:var(--mu);border:1px solid var(--bd);border-radius:99px;padding:3px 11px;background:var(--cd);max-width:46vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.wrap{max-width:1000px;margin:0 auto;padding:26px 18px 100px}
-button,.btn{font:inherit;font-weight:550;cursor:pointer;border:1px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:8px;padding:7px 13px;text-decoration:none;display:inline-block;transition:border-color .15s,background .15s}
+.wrap{max-width:1000px;margin:0 auto;padding:26px 18px calc(110px + var(--sa))}
+button,.btn{font:inherit;font-weight:550;cursor:pointer;border:1px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:8px;padding:7px 13px;text-decoration:none;display:inline-block;touch-action:manipulation;transition:border-color .15s,background .15s}
 button:hover,.btn:hover{border-color:var(--ac)}
 :focus-visible{outline:2px solid var(--ac);outline-offset:2px}
 .pri{background:var(--ac);border-color:var(--ac);color:var(--ax)}.pri:hover{background:var(--ah);border-color:var(--ah)}
-.dn{color:var(--dn);border-color:color-mix(in srgb,var(--dn) 45%,var(--bd))}.dn:hover{background:var(--ds);border-color:var(--dn)}
+.dn{color:var(--dn);border-color:var(--bd)}.dn:hover{background:var(--ds);border-color:var(--dn)}
 button:disabled{opacity:.55;cursor:wait}
-.ib{width:36px;height:36px;padding:0;font-size:16px}
+.ib{width:38px;height:38px;padding:0;font-size:16px}
 h1{font-size:26px;letter-spacing:-.02em;margin-bottom:6px}
 .lead{color:var(--mu);margin-bottom:22px;max-width:60ch}
 .two{display:grid;grid-template-columns:1.25fr 1fr;gap:26px;align-items:start}
-@media(max-width:860px){.two{grid-template-columns:1fr}}
-.steps{list-style:none;counter-reset:s;display:grid;gap:12px}
+.steps{list-style:none;counter-reset:s;display:grid;gap:12px;padding:0}
 .steps li{counter-increment:s;position:relative;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:14px 16px 14px 54px;box-shadow:var(--sh)}
 .steps li:before{content:counter(s);position:absolute;left:15px;top:14px;width:26px;height:26px;border-radius:50%;background:var(--as);color:var(--ac);font-weight:700;display:grid;place-items:center;font-size:13px}
 .steps h3{font-size:15px;margin-bottom:3px}.steps p{color:var(--mu);margin-bottom:8px}.steps p:last-child{margin:0}
@@ -45,68 +48,81 @@ input[type=text],input[type=password],select{width:100%;padding:9px 11px;border:
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
 .st{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:13px 16px;box-shadow:var(--sh)}
 .st span{font-size:12.5px;color:var(--mu)}.st b{display:block;font-size:22px;letter-spacing:-.02em}
-.dz{border:1.5px dashed var(--bd);border-radius:12px;padding:26px 14px;text-align:center;color:var(--mu);cursor:pointer;background:var(--cd);transition:.15s;display:block}
+.dz{border:1.5px dashed var(--bd);border-radius:12px;padding:26px 14px;text-align:center;color:var(--mu);cursor:pointer;background:var(--cd);transition:.15s;display:block;position:relative}
 .dz:hover,.dz:focus-visible{border-color:var(--ac);background:var(--as);color:var(--tx)}
-.dz b{color:var(--tx)}.dz input{display:none}
+.dz b{color:var(--tx)}
+.up2{display:flex;gap:8px;margin-top:10px}.up2 button{flex:1;padding:11px}
 .queue{display:grid;gap:7px;margin-top:10px}
 .q{background:var(--cd);border:1px solid var(--bd);border-radius:9px;padding:8px 12px;font-size:13px;position:relative;overflow:hidden}
-.q div{display:flex;gap:10px;align-items:center;position:relative}
-.q .n{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.q>div{display:flex;gap:10px;align-items:center;position:relative}
+.q .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .q .s{color:var(--mu);max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.q .s.ok{color:var(--ac)}.q .s.bad{color:var(--dn)}
 .q i{position:absolute;left:0;top:0;bottom:0;background:var(--as);width:0;transition:width .2s}
-.q .x{border:0;background:none;padding:0 4px;color:var(--mu)}
+.q .x{border:0;background:none;padding:4px 8px;color:var(--mu);font-size:16px}
 .bar{display:flex;gap:10px;align-items:center;margin:22px 0 10px;flex-wrap:wrap}
 .bar h2{font-size:16px}.bar input,.bar select{margin:0;width:auto}.bar #q{width:210px}
 .list{background:var(--cd);border:1px solid var(--bd);border-radius:12px;overflow:hidden;box-shadow:var(--sh)}
 .row{display:grid;grid-template-columns:26px 1fr 84px 128px auto;gap:12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--bd)}
 .row:last-child{border-bottom:0}.row.on{background:var(--as)}
-.row.h{font-size:12px;color:var(--mu);background:var(--bg);padding:7px 14px;text-transform:uppercase;letter-spacing:.04em}
-.nm{display:flex;align-items:center;gap:10px;min-width:0}.nm b{font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row.h{font-size:12px;color:var(--mu);background:var(--bg);padding:7px 14px;letter-spacing:.02em}
+.nm{display:flex;align-items:center;gap:10px;min-width:0}.nm>div{min-width:0}.nm b{display:block;font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta{display:none;font-size:12px;color:var(--mu)}
 .sz,.dt{font-size:13px;color:var(--mu)}
-.ac{display:flex;gap:6px}.ac button{padding:4px 10px;font-size:13px}
-.bd{flex:none;min-width:38px;text-align:center;font-size:10.5px;font-weight:700;text-transform:uppercase;padding:4px 5px;border-radius:6px;background:color-mix(in srgb,currentColor 13%,transparent)}
+.ac{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.ac button{padding:4px 10px;font-size:13px}
+.bd{flex:none;min-width:38px;text-align:center;font-size:10.5px;font-weight:700;padding:4px 5px;border-radius:6px;background:var(--as)}
 .c-img{color:#2563eb}.c-pdf{color:#dc2626}.c-doc{color:#0891b2}.c-arc{color:#d97706}.c-code{color:#7c3aed}.c-av{color:#db2777}.c-oth{color:var(--mu)}
 .empty{padding:34px 16px;text-align:center;color:var(--mu)}
-input[type=checkbox]{width:16px;height:16px;accent-color:var(--ac)}
-.nm b{display:block}.nm>div{min-width:0}.meta{display:none;font-size:12px;color:var(--mu)}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--ac)}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
 .seg label{position:relative;margin:0;border:1.5px solid var(--bd);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--tx);font-size:14px;background:var(--bg)}
+.seg label.on{border-color:var(--ac);background:var(--as)}
 .seg label small{display:block;color:var(--mu);font-size:12px;margin-top:2px}
 .seg input{position:absolute;opacity:0;pointer-events:none}
-.seg label:has(input:checked){border-color:var(--ac);background:var(--as)}
-.seg label:has(input:focus-visible){outline:2px solid var(--ac);outline-offset:2px}
+dialog{margin:auto;border:1px solid var(--bd);border-radius:14px;background:var(--cd);color:var(--tx);padding:0;max-width:94vw;max-height:92dvh;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(5,8,10,.6)}
 #qd{width:400px;padding:20px}#qd h3{margin-bottom:2px}#qd .sub{color:var(--mu);font-size:13px;margin-bottom:14px}
 .qbox{display:grid;place-items:center;background:#fff;border-radius:12px;padding:6px;width:min(280px,100%);aspect-ratio:1;margin:0 auto 8px;color:#555;text-align:center;font-size:13px}
 .qbox svg{width:100%;height:100%;display:block}
 .qt{text-align:center;color:var(--mu);font-size:13px;margin-bottom:12px;min-height:20px}
 .qw{background:var(--ds);color:var(--dn);border-radius:8px;padding:9px 12px;font-size:12.5px;margin-bottom:12px}
-.up2{display:flex;gap:8px;margin-top:10px}.up2 button{flex:1;padding:11px}
-@media(max-width:860px){form.card{position:static}}
-@media(pointer:fine){#cam{display:none}}
-@media(max-width:720px){
-.row{grid-template-columns:26px 1fr auto;gap:10px;padding:10px 12px}.sz,.dt{display:none}.meta{display:block}
-.st b{font-size:17px}.st{padding:10px 12px}.wrap{padding:16px 12px 120px}.in{padding:10px 12px}.chip{display:none}h1{font-size:22px}
-button,.btn{min-height:40px}.ib{width:40px;height:40px}.ac button{padding:6px 11px}
-.bar #q{flex:1;width:auto;min-width:0}.bar select{flex:1}.bar h2,.bar .sp{display:none}
-input[type=checkbox]{width:20px;height:20px}
-.sb{left:12px;right:12px;transform:none;justify-content:space-between;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
-.toasts{top:64px;bottom:auto;left:12px;right:12px;max-width:none}.dz{padding:20px 12px}#qd,#cf{width:92vw}}
-.sb{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:9px 12px 9px 18px;border-radius:12px;display:flex;gap:10px;align-items:center;box-shadow:0 8px 30px rgba(0,0,0,.3);z-index:8}
-.sb button{padding:5px 11px}
-dialog{margin:auto;border:1px solid var(--bd);border-radius:14px;background:var(--cd);color:var(--tx);padding:0;max-width:94vw;box-shadow:0 20px 60px rgba(0,0,0,.35)}
-dialog::backdrop{background:rgba(5,8,10,.6)}
-#cf{width:380px;padding:20px}#cf p{color:var(--mu);margin:6px 0 16px}#cf form{display:flex;gap:8px;justify-content:flex-end}
-.toasts{position:fixed;right:18px;bottom:18px;display:grid;gap:8px;z-index:20;max-width:min(380px,90vw)}
-.toast{background:var(--tx);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+#cf{width:380px;padding:20px}#cf p{color:var(--mu);margin:6px 0 16px;word-break:break-word}#cf form{display:flex;gap:8px;justify-content:flex-end}
+#pv{width:min(900px,94vw);display:flex;flex-direction:column}
+#pv[open]{display:flex}
+.ph{display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--bd)}.ph b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pb{overflow:auto;padding:12px;display:grid;place-items:center;min-height:200px}
+.pb img,.pb video{max-width:100%;max-height:70dvh}.pb iframe{width:100%;height:70dvh;border:0}.pb pre{width:100%;white-space:pre-wrap;word-break:break-word;font-size:13px}
+.sb{position:fixed;left:50%;bottom:calc(22px + var(--sa));transform:translateX(-50%);width:max-content;max-width:calc(100vw - 24px);background:var(--tx);color:var(--bg);padding:9px 12px 9px 18px;border-radius:12px;display:flex;gap:10px;align-items:center;box-shadow:0 8px 30px rgba(0,0,0,.3);z-index:8}
+.sb button{padding:6px 12px}
+.toasts{position:fixed;right:18px;bottom:18px;display:grid;gap:8px;z-index:50;max-width:min(380px,90vw);pointer-events:none}
+.toast{background:var(--tx);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.25);word-break:break-word}
 .toast.bad{background:var(--dn);color:#fff}
 .busy{position:fixed;inset:0;z-index:40;display:grid;place-items:center;pointer-events:none}
-.busy.blk{pointer-events:auto;background:rgba(5,8,10,.35);backdrop-filter:blur(2px);cursor:progress}
-.bx{display:flex;align-items:center;gap:14px;background:var(--cd);color:var(--tx);border:1px solid var(--bd);border-radius:14px;padding:16px 22px;box-shadow:0 20px 60px rgba(0,0,0,.35);max-width:min(420px,90vw);animation:pop .15s ease-out}
+.busy.blk{pointer-events:auto;background:rgba(5,8,10,.35);cursor:progress}
+.bx{display:flex;align-items:center;gap:14px;background:var(--cd);color:var(--tx);border:1px solid var(--bd);border-radius:14px;padding:16px 22px;box-shadow:0 20px 60px rgba(0,0,0,.35);max-width:min(420px,90vw)}
 .bx div{min-width:0}.bx b{display:block;font-size:15px}.bx small{display:block;color:var(--mu);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .spin{flex:none;width:24px;height:24px;border-radius:50%;border:3px solid var(--as);border-top-color:var(--ac);animation:rot .7s linear infinite}
-@keyframes rot{to{transform:rotate(360deg)}}@keyframes pop{from{opacity:0;transform:scale(.94)}}
-.ov{position:fixed;inset:0;background:color-mix(in srgb,var(--ac) 20%,transparent);border:3px dashed var(--ac);display:none;place-items:center;font-size:22px;font-weight:700;z-index:30;pointer-events:none;backdrop-filter:blur(3px)}
+@keyframes rot{to{transform:rotate(360deg)}}
+.ov{position:fixed;inset:0;background:var(--as);opacity:.92;border:3px dashed var(--ac);display:none;place-items:center;font-size:22px;font-weight:700;z-index:30;pointer-events:none}
 .ov.on{display:grid}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation-duration:2s!important}}
+@media(pointer:fine){#cam{display:none}}
+@media(max-width:860px){.two{grid-template-columns:1fr}form.card{position:static}}
+@media(max-width:720px){
+input[type=text],input[type=password],select{font-size:16px;min-height:44px}
+.in{padding:10px 12px}.chip{display:none}.wrap{padding:16px 12px calc(120px + var(--sa))}h1{font-size:22px}
+button,.btn{min-height:44px}.ib{width:44px;height:44px}
+.st b{font-size:17px}.st{padding:10px 12px}.dz{padding:20px 12px}
+.bar #q{flex:1;width:auto;min-width:0}.bar select{flex:1}.bar h2,.bar .sp{display:none}
+.row{grid-template-columns:28px 1fr;gap:6px 10px;padding:12px}
+.sz,.dt,.row.h .e{display:none}.meta{display:block}
+.ac{grid-column:1/-1;justify-content:stretch}.ac button{flex:1;padding:8px 6px;font-size:14px}
+input[type=checkbox]{width:22px;height:22px}
+.sb{left:12px;right:12px;width:auto;max-width:none;transform:none;justify-content:space-between;padding:10px}
+.sb b{flex:1}
+.toasts{top:calc(64px + env(safe-area-inset-top,0px));bottom:auto;left:12px;right:12px;max-width:none}
+#qd,#cf,#pv{width:94vw}#cf form button{flex:1}
+.busy:not(.blk){place-items:end center;padding-bottom:calc(90px + var(--sa))}
+}
 </style>
 </head>
 <body>
@@ -114,9 +130,9 @@ dialog::backdrop{background:rgba(5,8,10,.6)}
   <div class="logo"><span class="mk">▣</span>Dosya Kasası</div>
   <div class="sp"></div>
   <span id="chip" class="chip hide"></span>
-  <button id="th" class="ib" title="Tema" aria-label="Temayı değiştir">◐</button>
-  <button id="qrb" class="ib hide" title="QR ile telefonu bağla" aria-label="QR ile telefonu bağla">📱</button>
-  <button id="gear" class="ib hide" title="Bağlantı ayarları" aria-label="Ayarlar">⚙</button>
+  <button id="th" class="ib" type="button" aria-label="Temayı değiştir">◐</button>
+  <button id="qrb" class="ib hide" type="button" aria-label="QR ile telefonu bağla">📱</button>
+  <button id="gear" class="ib hide" type="button" aria-label="Bağlantı ayarları">⚙</button>
 </div></header>
 
 <main class="wrap">
@@ -127,19 +143,19 @@ dialog::backdrop{background:rgba(5,8,10,.6)}
     <ol class="steps">
       <li><h3>Özel bir depo oluştur</h3><p>GitHub'da yeni depo sayfasını aç. Bir ad ver (örn. <code>depo</code>), görünürlüğü <b>Private</b> seç, <b>Add a README file</b>'ı işaretle ve <b>Create repository</b>'ye bas.</p><a class="btn" target="_blank" rel="noopener" href="https://github.com/new">Depo oluştur ↗</a></li>
       <li><h3>Token sayfasını aç</h3><p><b>Token name</b> alanına <code>dosya-kasasi</code> yaz. <b>Expiration</b> için 90 gün ya da özel bir tarih seç. <b>Resource owner</b> kendi hesabın olmalı.</p><a class="btn" target="_blank" rel="noopener" href="https://github.com/settings/personal-access-tokens/new">Token sayfası ↗</a></li>
-      <li><h3>Erişimi tek depoya sınırla</h3><p><b>Repository access</b> bölümünde <b>Only select repositories</b>'i seç ve oluşturduğun depoyu işaretle. Sonra <b>Permissions → Add permissions</b> ile <b>Contents</b>'i ekle, erişimi <b>Read and write</b> yap. Başka izin verme.</p></li>
+      <li><h3>Erişimi tek depoya sınırla</h3><p><b>Repository access</b> bölümünde <b>Only select repositories</b>'i seç ve depoyu işaretle. Sonra <b>Permissions → Add permissions</b> ile <b>Contents</b>'i ekle, erişimi <b>Read and write</b> yap. Başka izin verme.</p></li>
       <li><h3>Token'ı kopyala</h3><p><b>Generate token</b>'a bas. <code>github_pat_…</code> ile başlayan değeri hemen kopyala, sayfadan çıkınca bir daha gösterilmez.</p></li>
-      <li><h3>Buraya yapıştır ve bağlan</h3><p>Sağdaki forma <code>kullanici/depo</code> biçiminde depo adını ve token'ı gir. Depo herkese açıksa bağlanmayı reddeder.</p></li>
+      <li><h3>Buraya yapıştır ve bağlan</h3><p>Forma <code>kullanici/depo</code> biçiminde depo adını ve token'ı gir. Depo herkese açıksa bağlanmayı reddeder.</p></li>
     </ol>
     <form class="card" id="form" autocomplete="off">
       <h2>Bağlantı</h2>
       <div id="err" class="err hide" role="alert"></div>
       <label for="repo">Depo (kullanici/depo-adi)</label>
-      <input type="text" id="repo" placeholder="ornek/depo" required>
+      <input type="text" id="repo" placeholder="ornek/depo" autocapitalize="none" autocorrect="off" spellcheck="false" required>
       <label for="tok">Fine-grained token</label>
-      <input type="password" id="tok" placeholder="github_pat_…">
+      <input type="password" id="tok" placeholder="github_pat_…" autocapitalize="none" autocorrect="off" spellcheck="false">
       <label for="folder">Klasör (depo içinde)</label>
-      <input type="text" id="folder" value="dosyalar">
+      <input type="text" id="folder" value="dosyalar" autocapitalize="none" autocorrect="off">
       <label style="display:flex;gap:8px;align-items:center;color:var(--tx);margin-bottom:14px;font-size:14px"><input type="checkbox" id="rem" checked> Bu cihazda hatırla</label>
       <div class="row2">
         <button class="pri" id="go" type="submit">Bağlan</button>
@@ -157,42 +173,43 @@ dialog::backdrop{background:rgba(5,8,10,.6)}
     <div class="st"><span>Klasör boyutu</span><b id="c2">0</b></div>
     <div class="st"><span>Depo boyutu</span><b id="c3">–</b></div>
   </div>
-  <label class="dz" id="dz" tabindex="0">
-    <input type="file" id="fi" multiple>
-    <b>Dosyaları buraya bırak</b>, seçmek için tıkla ya da Ctrl+V ile yapıştır<br><span style="font-size:12.5px">Yükleme otomatik başlar · en fazla 100 MB, 25 MB üstü başarısız olabilir</span>
+  <label class="dz" id="dz" tabindex="0" for="fi">
+    <b>Dosyaları buraya bırak</b>, seçmek için dokun ya da Ctrl+V ile yapıştır<br><span style="font-size:12.5px">Yükleme otomatik başlar · en fazla 100 MB, 25 MB üstü başarısız olabilir</span>
   </label>
+  <input type="file" id="fi" class="vh" multiple tabindex="-1">
+  <input type="file" id="fc" class="vh" accept="image/*" capture="environment" tabindex="-1">
   <div class="up2"><button type="button" class="pri" id="pick">Dosya seç</button><button type="button" id="cam">📷 Fotoğraf çek</button></div>
-  <input type="file" id="fc" accept="image/*" capture="environment" hidden>
   <div class="queue" id="queue"></div>
 
   <div class="bar">
     <h2>Dosyalar</h2><div class="sp"></div>
-    <input type="text" id="q" placeholder="Ara ( / )" aria-label="Ara">
+    <input type="text" id="q" placeholder="Ara ( / )" aria-label="Ara" autocomplete="off">
     <select id="sort" aria-label="Sırala"><option value="new">En yeni</option><option value="old">En eski</option><option value="name">Ada göre</option><option value="size">Boyuta göre</option></select>
-    <button id="rf">Yenile</button>
+    <button type="button" id="rf">Yenile</button>
   </div>
   <div class="list">
-    <div class="row h"><input type="checkbox" id="all" aria-label="Tümünü seç"><span>Ad</span><span class="sz">Boyut</span><span class="dt">Tarih</span><span></span></div>
+    <div class="row h"><input type="checkbox" id="all" aria-label="Tümünü seç"><span>Tümünü seç</span><span class="sz">Boyut</span><span class="dt">Tarih</span><span class="e"></span></div>
     <div id="rows"></div>
   </div>
 </section>
 </main>
 
-<div class="sb hide" id="sb"><b id="sn"></b><button id="sdl">İndir</button><button id="srm" class="dn">Sil</button><button id="sx">Vazgeç</button></div>
+<div class="sb hide" id="sb"><b id="sn"></b><button type="button" id="sdl">İndir</button><button type="button" id="srm" class="dn">Sil</button><button type="button" id="sx">Vazgeç</button></div>
 <dialog id="cf"><h3 id="cft"></h3><p id="cfx"></p><form method="dialog"><button value="no">Vazgeç</button><button value="ok" class="dn" id="cfok">Sil</button></form></dialog>
+<dialog id="pv"><div class="ph"><b id="pvt"></b><button type="button" id="pvd">İndir</button><button type="button" id="pvx">Kapat</button></div><div class="pb" id="pvb"></div></dialog>
 <dialog id="qd">
   <h3>Telefonu QR ile bağla</h3><p class="sub">Telefon kamerasıyla okut, site açılır, bağlanır ve dosya yüklemeye hazır olur.</p>
   <div class="seg">
-    <label><input type="radio" name="qm" value="p" checked><b>Kalıcı</b><small>Telefon bağlantıyı hatırlar</small></label>
+    <label class="on"><input type="radio" name="qm" value="p" checked><b>Kalıcı</b><small>Telefon bağlantıyı hatırlar</small></label>
     <label><input type="radio" name="qm" value="s"><b>Tek seferlik</b><small>Tarayıcı kapanınca silinir</small></label>
   </div>
   <label for="qs">Site adresi (telefonun açacağı)</label>
-  <input type="text" id="qs" inputmode="url" placeholder="https://kullanici.github.io/">
+  <input type="text" id="qs" inputmode="url" autocapitalize="none" placeholder="https://kullanici.github.io/">
   <div class="qbox" id="qb"></div><div class="qt" id="qtm"></div>
   <div class="qw">QR, token'ını içerir. Sadece kendi telefonunla okut, ekran görüntüsünü paylaşma. 2 dakika sonra kendiliğinden kapanır.</div>
-  <div class="row2"><button id="qc">Bağlantıyı kopyala</button><button id="qn">Yenile</button><button id="qx" style="margin-left:auto">Kapat</button></div>
+  <div class="row2"><button type="button" id="qc">Bağlantıyı kopyala</button><button type="button" id="qn">Yenile</button><button type="button" id="qx" style="margin-left:auto">Kapat</button></div>
 </dialog>
-<div class="toasts" id="toasts"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
 <div class="busy hide" id="busy" role="status" aria-live="polite"><div class="bx"><span class="spin"></span><div><b id="bt"></b><small id="bs"></small></div></div></div>
 <div class="ov" id="ov">Yüklemek için bırak</div>
 
@@ -206,22 +223,30 @@ const ext=n=>n.includes(".")?n.split(".").pop().toLowerCase():"";
 const tsOf=n=>{const m=n.match(/^(\d{13})_/);return m?+m[1]:0},shown=n=>n.replace(/^\d{13}_/,"");
 const CAT={img:"png jpg jpeg gif webp svg bmp ico avif",pdf:"pdf",doc:"doc docx odt rtf txt md xls xlsx csv ppt pptx",arc:"zip rar 7z tar gz",code:"js ts json html css py java c cpp xml yml yaml sh sql",av:"mp3 wav ogg mp4 webm mov mkv"};
 const cat=n=>{const e=ext(n);for(const k in CAT)if(CAT[k].split(" ").includes(e))return k;return"oth"};
-let cfg=null,info=null,items=[],sel=new Set(),queue=[],busy=false,seq=0;
+const PV={img:"png jpg jpeg gif webp svg bmp avif",pdf:"pdf",vid:"mp4 webm mov",aud:"mp3 wav ogg",txt:"txt md csv json xml css js ts py yml yaml sh sql log"};
+const MIME={png:"image/png",jpg:"image/jpeg",jpeg:"image/jpeg",gif:"image/gif",webp:"image/webp",svg:"image/svg+xml",bmp:"image/bmp",avif:"image/avif",pdf:"application/pdf",mp4:"video/mp4",webm:"video/webm",mov:"video/quicktime",mp3:"audio/mpeg",wav:"audio/wav",ogg:"audio/ogg"};
+const kind=n=>{const e=ext(n);for(const k in PV)if(PV[k].split(" ").includes(e))return k;return""};
+const mime=n=>MIME[ext(n)]||"application/octet-stream";
+const canShare=typeof navigator.canShare==="function"&&typeof navigator.share==="function";
+let cfg=null,info=null,items=[],sel=new Set(),queue=[],busy=false,op=false,seq=0;
 
 /* tema */
 const root=document.documentElement;
-root.dataset.theme=localStorage.getItem("dk-theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
-$("th").onclick=()=>{const t=root.dataset.theme==="dark"?"light":"dark";root.dataset.theme=t;localStorage.setItem("dk-theme",t)};
+const gs=k=>{try{return localStorage.getItem(k)}catch{return null}};
+root.dataset.theme=gs("dk-theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+$("th").onclick=()=>{const t=root.dataset.theme==="dark"?"light":"dark";root.dataset.theme=t;try{localStorage.setItem("dk-theme",t)}catch{}};
 
 function toast(m,t){const d=document.createElement("div");d.className="toast "+(t||"");d.textContent=m;$("toasts").appendChild(d);setTimeout(()=>d.remove(),t==="bad"?6500:3200)}
 function busyOn(t,sub,block){const b=$("busy");b.classList.remove("hide");b.classList.toggle("blk",!!block);$("bt").textContent=t;$("bs").textContent=sub||""}
 function busyOff(){$("busy").classList.add("hide")}
-function fail(e){toast(e.message,"bad");if(/^401/.test(e.message))setupView(true)}
+function fail(e){toast(e.message||String(e),"bad");if(/^401/.test(e.message))setupView(true)}
 function ask(t,x,ok){return new Promise(r=>{$("cft").textContent=t;$("cfx").textContent=x;$("cfok").textContent=ok;const d=$("cf");d.returnValue="";d.onclose=()=>r(d.returnValue==="ok");d.showModal()})}
+/* çok adımlı işlemlerde çift tıklamayı engelle, hata olsa da kilidi aç */
+async function guard(fn){if(op)return;op=true;try{await fn()}catch(e){fail(e)}finally{op=false;busyOff()}}
 
 /* GitHub API */
-async function gh(method,path,body){
-  try{return await fetch(API+path,{method,headers:{Authorization:"Bearer "+cfg.token,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",...(body?{"Content-Type":"application/json"}:{})},body:body?JSON.stringify(body):undefined})}
+async function gh(method,path,body,accept){
+  try{return await fetch(API+path,{method,headers:{Authorization:"Bearer "+cfg.token,Accept:accept||"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",...(body?{"Content-Type":"application/json"}:{})},body:body?JSON.stringify(body):undefined})}
   catch{throw new Error("api.github.com'a ulaşılamadı. Ağ engeli ya da bağlantı sorunu olabilir.")}
 }
 async function ghErr(r){let m="";try{m=(await r.json()).message||""}catch{}
@@ -248,23 +273,37 @@ function put(name,file,onp){return new Promise(async(ok,no)=>{
   x.onerror=()=>no(new Error("Ağ hatası"));
   x.send(JSON.stringify({message:"Yükle: "+file.name,content}))})}
 
-/* indirme: Git Blob API (JSON + base64). Yönlendirme/CORS sorunu yaşatmaz. */
-async function blobOf(it){
-  const r=await gh("GET",`/repos/${cfg.repo}/git/blobs/${it.sha}`);
-  if(!r.ok)throw new Error(await ghErr(r));
-  const d=await r.json();
-  if(d.encoding!=="base64")throw new Error("Beklenmeyen dosya biçimi");
-  return (await fetch("data:application/octet-stream;base64,"+d.content.replace(/\s/g,""))).blob();
-}
-async function save(name){
+/* indirme: raw blob (base64 şişmesi ve bellek sorunu yok) */
+async function blobOf(name){
   const it=items.find(i=>i.name===name);
-  if(!it){toast("Dosya bulunamadı, listeyi yenile","bad");return false}
-  try{
-    const b=await blobOf(it),a=document.createElement("a"),u=URL.createObjectURL(b);
-    a.href=u;a.download=shown(name);document.body.appendChild(a);a.click();a.remove();
-    setTimeout(()=>URL.revokeObjectURL(u),10000);return true;
-  }catch(e){fail(e);return false}
+  if(!it)throw new Error("Dosya bulunamadı, listeyi yenile");
+  const r=await gh("GET",`/repos/${cfg.repo}/git/blobs/${it.sha}`,null,"application/vnd.github.raw+json");
+  if(!r.ok)throw new Error(await ghErr(r));
+  const b=await r.blob();return b.slice(0,b.size,mime(name));
 }
+function dlBlob(b,name){
+  const a=document.createElement("a"),u=URL.createObjectURL(b);
+  a.href=u;a.download=shown(name);a.rel="noopener";document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),60000);
+}
+async function save(name){try{dlBlob(await blobOf(name),name);return true}catch(e){fail(e);return false}}
+async function shareFile(name){
+  const b=await blobOf(name),f=new File([b],shown(name),{type:b.type});
+  if(!canShare||!navigator.canShare({files:[f]}))return toast("Bu cihaz dosya paylaşmayı desteklemiyor","bad");
+  try{await navigator.share({files:[f]})}catch(e){if(e.name!=="AbortError")throw e}
+}
+async function preview(name){
+  const k=kind(name),b=await blobOf(name),box=$("pvb");box.replaceChildren();
+  let el,u="";
+  if(k==="txt"){el=document.createElement("pre");el.textContent=(await b.slice(0,200000).text())+(b.size>200000?"\n…(kısaltıldı)":"")}
+  else{u=URL.createObjectURL(b);
+    el=document.createElement({img:"img",pdf:"iframe",vid:"video",aud:"audio"}[k]);el.src=u;
+    if(k==="vid"||k==="aud"){el.controls=true;el.playsInline=true}if(k==="img")el.alt=shown(name)}
+  box.appendChild(el);$("pvt").textContent=shown(name);$("pvd").onclick=()=>dlBlob(b,name);
+  const d=$("pv");d.onclose=()=>{box.replaceChildren();if(u)URL.revokeObjectURL(u)};d.showModal();
+}
+$("pvx").onclick=()=>$("pv").close();
+$("pv").onclick=e=>{if(e.target===$("pv"))$("pv").close()};
 
 /* bağlantı */
 const rd=(st,k)=>{try{return JSON.parse(st.getItem(k)||"null")}catch{return null}};
@@ -273,7 +312,7 @@ function store(c,perm){
   try{
     if(perm){localStorage.setItem(LS,JSON.stringify(c));sessionStorage.removeItem(SS)}
     else{sessionStorage.setItem(SS,JSON.stringify(c));localStorage.removeItem(LS)}
-  }catch{toast("Tarayıcı depolamaya izin vermiyor","bad")}
+  }catch{toast("Tarayıcı depolamaya izin vermiyor, bağlantı kalıcı olmayacak","bad")}
 }
 const parseRepo=v=>{const p=v.trim().replace(/^https?:\/\/github\.com\//i,"").replace(/\.git$/i,"").replace(/^\/+|\/+$/g,"").split("/");return p.length>=2&&p[0]&&p[1]?p[0]+"/"+p[1]:""};
 const cleanFolder=v=>v.trim().replace(/^\/+|\/+$/g,"").replace(/[^\p{L}\p{N}._\-\/ ]/gu,"_")||"dosyalar";
@@ -294,6 +333,7 @@ function setupView(connected){
   $("cancel").classList.toggle("hide",!connected);$("out").classList.toggle("hide",!connected);
   if(connected&&cfg){$("repo").value=cfg.repo;$("folder").value=cfg.folder;$("tok").value="";$("rem").checked=!rd(sessionStorage,SS);$("tok").placeholder="Boş bırakırsan mevcut token kullanılır"}
   else $("tok").placeholder="github_pat_…";
+  scrollTo(0,0);
 }
 function mainView(){
   $("setup").classList.add("hide");$("main").classList.remove("hide");
@@ -332,6 +372,7 @@ function qTick(){
 }
 function qrDraw(){
   clearInterval(qiv);const b=$("qb"),l=qrLink();
+  document.querySelectorAll(".seg label").forEach(x=>x.classList.toggle("on",x.querySelector("input").checked));
   if(!l){b.textContent="Geçerli bir http(s) site adresi gir";$("qtm").textContent="";return}
   if(typeof qrcode==="undefined"){b.textContent="QR kütüphanesi yüklenemedi. Bağlantıyı kopyalayıp telefona gönderebilirsin.";$("qtm").textContent="";return}
   try{b.innerHTML=qrSvg(l)}catch{b.textContent="Bağlantı QR için çok uzun";return}
@@ -339,7 +380,7 @@ function qrDraw(){
   qleft=120;qTick();qiv=setInterval(qTick,1000);
 }
 $("qrb").onclick=()=>{
-  $("qs").value=/^https?:$/.test(location.protocol)?location.origin+location.pathname:(localStorage.getItem("dk-site")||"");
+  $("qs").value=/^https?:$/.test(location.protocol)?location.origin+location.pathname:(gs("dk-site")||"");
   $("qd").showModal();qrDraw();
 };
 document.querySelectorAll("input[name=qm]").forEach(r=>r.onchange=qrDraw);
@@ -354,34 +395,35 @@ $("qc").onclick=async()=>{
 $("cancel").onclick=mainView;
 $("out").onclick=async()=>{
   if(!await ask("Bağlantıyı kes","Token bu tarayıcıdan silinir. Dosyaların GitHub'daki depoda kalır.","Bağlantıyı kes"))return;
-  localStorage.removeItem(LS);sessionStorage.removeItem(SS);cfg=null;items=[];sel.clear();queue=[];rq();["repo","tok"].forEach(i=>$(i).value="");
-  $("gear").classList.add("hide");$("qrb").classList.add("hide");$("chip").classList.add("hide");setupView(false);
+  try{localStorage.removeItem(LS);sessionStorage.removeItem(SS)}catch{}
+  cfg=null;info=null;items=[];sel.clear();queue=[];rq();["repo","tok"].forEach(i=>$(i).value="");
+  $("gear").classList.add("hide");$("qrb").classList.add("hide");$("chip").classList.add("hide");$("sb").classList.add("hide");setupView(false);
 };
 
 /* yükleme */
-$("fi").onchange=e=>{addFiles(e.target.files);e.target.value=""};
-$("fc").onchange=e=>{addFiles(e.target.files);e.target.value=""};
+$("fi").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
+$("fc").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
 $("pick").onclick=()=>$("fi").click();$("cam").onclick=()=>$("fc").click();
 $("dz").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();$("fi").click()}};
-function addFiles(list){for(const f of list)queue.push(f.size>MAX?{f,st:"100 MB üstü",cls:"bad",p:0,big:1}:{f,st:"Bekliyor",cls:"",p:0});rq();if(!busy)run()}
+function addFiles(list){for(const f of list)queue.push(f.size>MAX?{f,st:"100 MB üstü",cls:"bad",p:0,big:1}:{f,st:"Bekliyor",cls:"",p:0});rq();run()}
 function rq(){
-  $("queue").innerHTML=queue.map((q,i)=>`<div class="q"><i style="width:${q.p*100}%"></i><div><span class="n">${E(q.f.name)}</span><span>${fmt(q.f.size)}</span><span class="s ${q.cls}" title="${E(q.st)}">${E(q.st)}</span>${q.cls==="bad"&&!q.big?`<button class="x" data-r="${i}" title="Tekrar dene" aria-label="Tekrar dene">↻</button>`:""}${q.cls==="bad"?`<button class="x" data-i="${i}" aria-label="Kaldır">✕</button>`:""}</div></div>`).join("");
+  $("queue").innerHTML=queue.map((q,i)=>`<div class="q"><i style="width:${q.p*100}%"></i><div><span class="n">${E(q.f.name)}</span><span>${fmt(q.f.size)}</span><span class="s ${q.cls}" title="${E(q.st)}">${E(q.st)}</span>${q.cls==="bad"&&!q.big?`<button type="button" class="x" data-r="${i}" aria-label="Tekrar dene">↻</button>`:""}${q.cls==="bad"?`<button type="button" class="x" data-i="${i}" aria-label="Kaldır">✕</button>`:""}</div></div>`).join("");
 }
 $("queue").onclick=e=>{
   const x=e.target.closest(".x");if(!x)return;
   if(x.dataset.i!==undefined){queue.splice(+x.dataset.i,1);rq()}
-  else{const q=queue[+x.dataset.r];if(q){q.cls="";q.st="Bekliyor";q.p=0;rq();if(!busy)run()}}
+  else{const q=queue[+x.dataset.r];if(q){q.cls="";q.st="Bekliyor";q.p=0;rq();run()}}
 };
 async function run(){
-  busy=true;
-  const tot=()=>queue.filter(x=>!x.big).length,dn=()=>queue.filter(x=>x.cls==="ok"||(x.cls==="bad"&&!x.big)).length;
-  const upd=q=>busyOn("Yükleniyor…",`${Math.min(dn()+1,tot())} / ${tot()} · ${q.f.name} · ${q.st}`,false);
-  for(const q of queue){
-    if(q.cls)continue;
-    q.st="0%";rq();upd(q);
+  if(busy)return;busy=true;let q,okN=0;
+  const real=()=>queue.filter(x=>!x.big),tot=()=>real().length,dn=()=>real().filter(x=>x.cls).length;
+  while(q=queue.find(x=>!x.cls)){
+    let last=-1;
+    const upd=()=>busyOn("Yükleniyor…",`${Math.min(dn()+1,tot())} / ${tot()} · ${q.f.name} · ${q.st}`,false);
+    q.st="0%";rq();upd();
     const n=(Date.now()+(seq++%1000))+"_"+q.f.name.replace(/[^\p{L}\p{N}._\-]/gu,"_");
     for(let t=0;t<3;t++){
-      try{await put(n,q.f,p=>{q.p=p;q.st=Math.round(p*100)+"%";rq();upd(q)});q.cls="ok";q.st="Tamam";q.p=1;break}
+      try{await put(n,q.f,p=>{q.p=p;const pc=Math.round(p*100);if(pc===last)return;last=pc;q.st=pc+"%";rq();upd()});q.cls="ok";q.st="Tamam";q.p=1;okN++;break}
       catch(e){
         if(/^(409|5\d\d)/.test(e.message)&&t<2){await new Promise(r=>setTimeout(r,900*(t+1)));continue}
         q.cls="bad";q.st=e.message;if(/^401/.test(e.message))fail(e);break;
@@ -390,19 +432,20 @@ async function run(){
     rq();
   }
   busy=false;busyOff();
-  const ok=queue.filter(q=>q.cls==="ok").length;if(ok)toast(ok+" dosya yüklendi","ok");
+  if(okN)toast(okN+" dosya yüklendi","ok");
   await refresh();
-  setTimeout(()=>{queue=queue.filter(q=>q.cls!=="ok");rq()},2500);
+  setTimeout(()=>{queue=queue.filter(x=>x.cls!=="ok");rq()},2500);
 }
-let dc=0;
-addEventListener("dragenter",e=>{if(!cfg||$("main").classList.contains("hide"))return;e.preventDefault();dc++;$("ov").classList.add("on")});
+let dc=0;const isMain=()=>cfg&&!$("main").classList.contains("hide");
+const hasFiles=e=>e.dataTransfer&&[...(e.dataTransfer.types||[])].includes("Files");
+addEventListener("dragenter",e=>{if(!isMain()||!hasFiles(e))return;e.preventDefault();dc++;$("ov").classList.add("on")});
 addEventListener("dragleave",()=>{if(--dc<=0){dc=0;$("ov").classList.remove("on")}});
-addEventListener("dragover",e=>e.preventDefault());
-addEventListener("drop",e=>{e.preventDefault();dc=0;$("ov").classList.remove("on");if(cfg&&!$("main").classList.contains("hide")&&e.dataTransfer.files.length)addFiles(e.dataTransfer.files)});
-addEventListener("paste",e=>{if(cfg&&!$("main").classList.contains("hide")&&e.clipboardData.files.length)addFiles(e.clipboardData.files)});
+addEventListener("dragover",e=>{if(hasFiles(e))e.preventDefault()});
+addEventListener("drop",e=>{if(!hasFiles(e))return;e.preventDefault();dc=0;$("ov").classList.remove("on");if(isMain()&&e.dataTransfer.files.length)addFiles([...e.dataTransfer.files])});
+addEventListener("paste",e=>{if(isMain()&&e.clipboardData&&e.clipboardData.files.length)addFiles([...e.clipboardData.files])});
 addEventListener("keydown",e=>{
   const tag=document.activeElement.tagName;
-  if(e.key==="/"&&cfg&&!/INPUT|TEXTAREA|SELECT/.test(tag)){e.preventDefault();$("q").focus()}
+  if(e.key==="/"&&isMain()&&!/INPUT|TEXTAREA|SELECT/.test(tag)){e.preventDefault();$("q").focus()}
   if(e.key==="Escape"&&sel.size&&!document.querySelector("dialog[open]")){sel.clear();render()}
 });
 
@@ -413,7 +456,7 @@ async function refresh(){
     items=await listFiles();const r=await gh("GET","/repos/"+cfg.repo);if(r.ok)info=await r.json();
     if(items.length>=1000)toast("Klasörde 1000 dosyaya ulaşıldı, GitHub bundan fazlasını listelemez. Ayarlardan yeni klasör seç.","bad");
   }catch(e){fail(e)}
-  busyOff();
+  if(!busy)busyOff();
   sel=new Set([...sel].filter(n=>items.some(i=>i.name===n)));render();
 }
 function view(){
@@ -426,14 +469,16 @@ function render(){
   $("c1").textContent=items.length;$("c2").textContent=fmt(items.reduce((t,i)=>t+i.size,0));$("c3").textContent=info?fmt(info.size*1024):"–";
   $("rows").innerHTML=v.length?v.map(i=>{
     const t=tsOf(i.name),n=shown(i.name),e=ext(n),on=sel.has(i.name),a=E(i.name);
-    return `<div class="row ${on?"on":""}"><input type="checkbox" data-n="${a}" ${on?"checked":""} aria-label="Seç"><div class="nm"><span class="bd c-${cat(n)}">${E(e.slice(0,4)||"dos")}</span><div><b title="${E(n)}">${E(n)}</b><span class="meta">${fmt(i.size)}${t?" · "+new Date(t).toLocaleDateString("tr-TR"):""}</span></div></div><span class="sz">${fmt(i.size)}</span><span class="dt">${t?new Date(t).toLocaleString("tr-TR",{dateStyle:"short",timeStyle:"short"}):""}</span><div class="ac"><button data-a="dl" data-n="${a}">İndir</button><button class="dn" data-a="rm" data-n="${a}">Sil</button></div></div>`}).join("")
-    :`<div class="empty">${items.length?"Aramayla eşleşen dosya yok.":"Henüz dosya yok. Yukarıya dosya bırakarak başla."}</div>`;
+    return `<div class="row ${on?"on":""}"><input type="checkbox" data-n="${a}" ${on?"checked":""} aria-label="Seç"><div class="nm"><span class="bd c-${cat(n)}">${E(e.slice(0,4)||"dos")}</span><div><b title="${E(n)}">${E(n)}</b><span class="meta">${fmt(i.size)}${t?" · "+new Date(t).toLocaleDateString("tr-TR"):""}</span></div></div><span class="sz">${fmt(i.size)}</span><span class="dt">${t?new Date(t).toLocaleString("tr-TR",{dateStyle:"short",timeStyle:"short"}):""}</span><div class="ac"><button type="button" data-a="dl" data-n="${a}">İndir</button>${kind(n)?`<button type="button" data-a="pv" data-n="${a}">Önizle</button>`:""}${canShare?`<button type="button" data-a="sh" data-n="${a}">Paylaş</button>`:""}<button type="button" class="dn" data-a="rm" data-n="${a}">Sil</button></div></div>`}).join("")
+    :`<div class="empty">${items.length?"Aramayla eşleşen dosya yok.":"Henüz dosya yok. Yukarıdan dosya seçerek başla."}</div>`;
   $("all").checked=v.length>0&&v.every(i=>sel.has(i.name));
   $("sb").classList.toggle("hide",!sel.size);$("sn").textContent=sel.size+" seçili";
 }
-$("rows").onclick=async e=>{
-  const b=e.target.closest("button[data-a]");if(!b)return;const n=b.dataset.n;
-  if(b.dataset.a==="dl"){busyOn("İndiriliyor…",shown(n),true);await save(n);busyOff()}
+$("rows").onclick=e=>{
+  const b=e.target.closest("button[data-a]");if(!b)return;const n=b.dataset.n,a=b.dataset.a;
+  if(a==="dl")guard(async()=>{busyOn("İndiriliyor…",shown(n),false);await save(n)});
+  else if(a==="pv")guard(async()=>{busyOn("Açılıyor…",shown(n),false);await preview(n)});
+  else if(a==="sh")guard(async()=>{busyOn("Hazırlanıyor…",shown(n),false);await shareFile(n)});
   else remove([n]);
 };
 $("rows").onchange=e=>{const c=e.target;if(c.dataset.n){c.checked?sel.add(c.dataset.n):sel.delete(c.dataset.n);render()}};
@@ -441,14 +486,14 @@ $("all").onchange=e=>{view().forEach(i=>e.target.checked?sel.add(i.name):sel.del
 $("q").oninput=render;$("sort").onchange=render;
 $("rf").onclick=async()=>{$("rf").disabled=true;await refresh();$("rf").disabled=false};
 $("sx").onclick=()=>{sel.clear();render()};
-$("sdl").onclick=async()=>{
+$("sdl").onclick=()=>guard(async()=>{
   const list=[...sel];let n=0;
-  for(let i=0;i<list.length;i++){busyOn("İndiriliyor…",`${i+1} / ${list.length} · ${shown(list[i])}`,true);if(await save(list[i]))n++;await new Promise(r=>setTimeout(r,400))}
-  busyOff();if(n)toast(n+" dosya indirildi","ok");
-};
+  for(let i=0;i<list.length;i++){busyOn("İndiriliyor…",`${i+1} / ${list.length} · ${shown(list[i])}`,false);if(await save(list[i]))n++;await new Promise(r=>setTimeout(r,700))}
+  if(n)toast(n+" dosya indirildi","ok");
+});
 $("srm").onclick=()=>remove([...sel]);
 
-async function remove(names){
+function remove(names){return guard(async()=>{
   if(!await ask(names.length>1?names.length+" dosya silinsin mi?":"Dosya silinsin mi?",names.length===1?shown(names[0]):"Bu işlem geri alınamaz. Git geçmişinde eski sürümler durur.","Sil"))return;
   let bad=0,first="",i=0;
   for(const n of names){
@@ -461,10 +506,9 @@ async function remove(names){
       items=items.filter(x=>x.name!==n);sel.delete(n);render();
     }catch(e){bad++;first=first||e.message}
   }
-  busyOff();
   bad?toast(`${names.length-bad} silindi, ${bad} silinemedi: ${first}`,"bad"):toast(names.length+" dosya silindi","ok");
-  refresh();
-}
+  await refresh();
+})}
 
 /* başlangıç */
 function fromHash(){
@@ -482,7 +526,7 @@ function fromHash(){
   }
   const c=load();
   if(!c)return setupView(false);
-  $("repo").value=c.repo;$("folder").value=c.folder;$("tok").value=c.token;
+  $("repo").value=c.repo;$("folder").value=c.folder;
   busyOn("Bağlanılıyor…","",true);const ok=await connect(c);busyOff();
   if(ok)mainView();else setupView(false);
 })();
