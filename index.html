@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0e7a62">
 <title>Dosya Kasası</title>
 <style>
 :root{--bg:#f5f6f8;--cd:#fff;--bd:#e2e5ea;--tx:#15181c;--mu:#667080;--ac:#0e7a62;--ah:#0a6350;--ax:#fff;--as:#e4f4ee;--dn:#c0372b;--ds:#fdebe8;--sh:0 1px 2px rgba(16,24,40,.05),0 6px 20px rgba(16,24,40,.05)}
@@ -67,7 +68,29 @@ input[type=text],input[type=password],select{width:100%;padding:9px 11px;border:
 .c-img{color:#2563eb}.c-pdf{color:#dc2626}.c-doc{color:#0891b2}.c-arc{color:#d97706}.c-code{color:#7c3aed}.c-av{color:#db2777}.c-oth{color:var(--mu)}
 .empty{padding:34px 16px;text-align:center;color:var(--mu)}
 input[type=checkbox]{width:16px;height:16px;accent-color:var(--ac)}
-@media(max-width:720px){.row{grid-template-columns:26px 1fr auto}.sz,.dt{display:none}.st b{font-size:17px}}
+.nm b{display:block}.nm>div{min-width:0}.meta{display:none;font-size:12px;color:var(--mu)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.seg label{position:relative;margin:0;border:1.5px solid var(--bd);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--tx);font-size:14px;background:var(--bg)}
+.seg label small{display:block;color:var(--mu);font-size:12px;margin-top:2px}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){border-color:var(--ac);background:var(--as)}
+.seg label:has(input:focus-visible){outline:2px solid var(--ac);outline-offset:2px}
+#qd{width:400px;padding:20px}#qd h3{margin-bottom:2px}#qd .sub{color:var(--mu);font-size:13px;margin-bottom:14px}
+.qbox{display:grid;place-items:center;background:#fff;border-radius:12px;padding:6px;width:min(280px,100%);aspect-ratio:1;margin:0 auto 8px;color:#555;text-align:center;font-size:13px}
+.qbox svg{width:100%;height:100%;display:block}
+.qt{text-align:center;color:var(--mu);font-size:13px;margin-bottom:12px;min-height:20px}
+.qw{background:var(--ds);color:var(--dn);border-radius:8px;padding:9px 12px;font-size:12.5px;margin-bottom:12px}
+.up2{display:flex;gap:8px;margin-top:10px}.up2 button{flex:1;padding:11px}
+@media(max-width:860px){form.card{position:static}}
+@media(pointer:fine){#cam{display:none}}
+@media(max-width:720px){
+.row{grid-template-columns:26px 1fr auto;gap:10px;padding:10px 12px}.sz,.dt{display:none}.meta{display:block}
+.st b{font-size:17px}.st{padding:10px 12px}.wrap{padding:16px 12px 120px}.in{padding:10px 12px}.chip{display:none}h1{font-size:22px}
+button,.btn{min-height:40px}.ib{width:40px;height:40px}.ac button{padding:6px 11px}
+.bar #q{flex:1;width:auto;min-width:0}.bar select{flex:1}.bar h2,.bar .sp{display:none}
+input[type=checkbox]{width:20px;height:20px}
+.sb{left:12px;right:12px;transform:none;justify-content:space-between;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+.toasts{top:64px;bottom:auto;left:12px;right:12px;max-width:none}.dz{padding:20px 12px}#qd,#cf{width:92vw}}
 .sb{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:9px 12px 9px 18px;border-radius:12px;display:flex;gap:10px;align-items:center;box-shadow:0 8px 30px rgba(0,0,0,.3);z-index:8}
 .sb button{padding:5px 11px}
 dialog{margin:auto;border:1px solid var(--bd);border-radius:14px;background:var(--cd);color:var(--tx);padding:0;max-width:94vw;box-shadow:0 20px 60px rgba(0,0,0,.35)}
@@ -92,6 +115,7 @@ dialog::backdrop{background:rgba(5,8,10,.6)}
   <div class="sp"></div>
   <span id="chip" class="chip hide"></span>
   <button id="th" class="ib" title="Tema" aria-label="Temayı değiştir">◐</button>
+  <button id="qrb" class="ib hide" title="QR ile telefonu bağla" aria-label="QR ile telefonu bağla">📱</button>
   <button id="gear" class="ib hide" title="Bağlantı ayarları" aria-label="Ayarlar">⚙</button>
 </div></header>
 
@@ -116,6 +140,7 @@ dialog::backdrop{background:rgba(5,8,10,.6)}
       <input type="password" id="tok" placeholder="github_pat_…">
       <label for="folder">Klasör (depo içinde)</label>
       <input type="text" id="folder" value="dosyalar">
+      <label style="display:flex;gap:8px;align-items:center;color:var(--tx);margin-bottom:14px;font-size:14px"><input type="checkbox" id="rem" checked> Bu cihazda hatırla</label>
       <div class="row2">
         <button class="pri" id="go" type="submit">Bağlan</button>
         <button type="button" id="cancel" class="hide">Vazgeç</button>
@@ -136,6 +161,8 @@ dialog::backdrop{background:rgba(5,8,10,.6)}
     <input type="file" id="fi" multiple>
     <b>Dosyaları buraya bırak</b>, seçmek için tıkla ya da Ctrl+V ile yapıştır<br><span style="font-size:12.5px">Yükleme otomatik başlar · en fazla 100 MB, 25 MB üstü başarısız olabilir</span>
   </label>
+  <div class="up2"><button type="button" class="pri" id="pick">Dosya seç</button><button type="button" id="cam">📷 Fotoğraf çek</button></div>
+  <input type="file" id="fc" accept="image/*" capture="environment" hidden>
   <div class="queue" id="queue"></div>
 
   <div class="bar">
@@ -153,12 +180,25 @@ dialog::backdrop{background:rgba(5,8,10,.6)}
 
 <div class="sb hide" id="sb"><b id="sn"></b><button id="sdl">İndir</button><button id="srm" class="dn">Sil</button><button id="sx">Vazgeç</button></div>
 <dialog id="cf"><h3 id="cft"></h3><p id="cfx"></p><form method="dialog"><button value="no">Vazgeç</button><button value="ok" class="dn" id="cfok">Sil</button></form></dialog>
+<dialog id="qd">
+  <h3>Telefonu QR ile bağla</h3><p class="sub">Telefon kamerasıyla okut, site açılır, bağlanır ve dosya yüklemeye hazır olur.</p>
+  <div class="seg">
+    <label><input type="radio" name="qm" value="p" checked><b>Kalıcı</b><small>Telefon bağlantıyı hatırlar</small></label>
+    <label><input type="radio" name="qm" value="s"><b>Tek seferlik</b><small>Tarayıcı kapanınca silinir</small></label>
+  </div>
+  <label for="qs">Site adresi (telefonun açacağı)</label>
+  <input type="text" id="qs" inputmode="url" placeholder="https://kullanici.github.io/">
+  <div class="qbox" id="qb"></div><div class="qt" id="qtm"></div>
+  <div class="qw">QR, token'ını içerir. Sadece kendi telefonunla okut, ekran görüntüsünü paylaşma. 2 dakika sonra kendiliğinden kapanır.</div>
+  <div class="row2"><button id="qc">Bağlantıyı kopyala</button><button id="qn">Yenile</button><button id="qx" style="margin-left:auto">Kapat</button></div>
+</dialog>
 <div class="toasts" id="toasts"></div>
 <div class="busy hide" id="busy" role="status" aria-live="polite"><div class="bx"><span class="spin"></span><div><b id="bt"></b><small id="bs"></small></div></div></div>
 <div class="ov" id="ov">Yüklemek için bırak</div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script>
-const LS="dosya-kasasi-v2",API="https://api.github.com",MAX=100*1048576;
+const LS="dosya-kasasi-v2",SS="dosya-kasasi-s",API="https://api.github.com",MAX=100*1048576;
 const $=id=>document.getElementById(id);
 const E=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt=n=>n>=1073741824?(n/1073741824).toFixed(2)+" GB":n>=1048576?(n/1048576).toFixed(1)+" MB":n>=1024?Math.round(n/1024)+" KB":n+" B";
@@ -227,7 +267,14 @@ async function save(name){
 }
 
 /* bağlantı */
-const load=()=>{try{return JSON.parse(localStorage.getItem(LS)||"null")}catch{return null}};
+const rd=(st,k)=>{try{return JSON.parse(st.getItem(k)||"null")}catch{return null}};
+const load=()=>rd(sessionStorage,SS)||rd(localStorage,LS);
+function store(c,perm){
+  try{
+    if(perm){localStorage.setItem(LS,JSON.stringify(c));sessionStorage.removeItem(SS)}
+    else{sessionStorage.setItem(SS,JSON.stringify(c));localStorage.removeItem(LS)}
+  }catch{toast("Tarayıcı depolamaya izin vermiyor","bad")}
+}
 const parseRepo=v=>{const p=v.trim().replace(/^https?:\/\/github\.com\//i,"").replace(/\.git$/i,"").replace(/^\/+|\/+$/g,"").split("/");return p.length>=2&&p[0]&&p[1]?p[0]+"/"+p[1]:""};
 const cleanFolder=v=>v.trim().replace(/^\/+|\/+$/g,"").replace(/[^\p{L}\p{N}._\-\/ ]/gu,"_")||"dosyalar";
 async function connect(c){
@@ -245,12 +292,12 @@ async function connect(c){
 function setupView(connected){
   $("setup").classList.remove("hide");$("main").classList.add("hide");
   $("cancel").classList.toggle("hide",!connected);$("out").classList.toggle("hide",!connected);
-  if(connected&&cfg){$("repo").value=cfg.repo;$("folder").value=cfg.folder;$("tok").value="";$("tok").placeholder="Boş bırakırsan mevcut token kullanılır"}
+  if(connected&&cfg){$("repo").value=cfg.repo;$("folder").value=cfg.folder;$("tok").value="";$("rem").checked=!rd(sessionStorage,SS);$("tok").placeholder="Boş bırakırsan mevcut token kullanılır"}
   else $("tok").placeholder="github_pat_…";
 }
 function mainView(){
   $("setup").classList.add("hide");$("main").classList.remove("hide");
-  $("gear").classList.remove("hide");$("chip").classList.remove("hide");
+  $("gear").classList.remove("hide");$("qrb").classList.remove("hide");$("chip").classList.remove("hide");
   $("chip").textContent=`${cfg.repo} · ${cfg.folder} · özel`;sel.clear();render();
 }
 $("form").onsubmit=async e=>{
@@ -260,18 +307,61 @@ $("form").onsubmit=async e=>{
   $("go").disabled=true;$("go").textContent="Bağlanıyor…";
   const ok=await connect(c);$("go").disabled=false;$("go").textContent="Bağlan";
   if(!ok)return;
-  localStorage.setItem(LS,JSON.stringify(c));mainView();toast("Bağlandı","ok");
+  store(c,$("rem").checked);mainView();toast("Bağlandı","ok");
 };
 $("gear").onclick=()=>setupView(true);
+
+/* QR ile telefon bağlama */
+let qiv=0,qleft=0;
+const qMode=()=>document.querySelector("input[name=qm]:checked").value;
+function qrLink(){
+  let u;try{u=new URL($("qs").value.trim());if(!/^https?:$/.test(u.protocol))throw 0}catch{return null}
+  u.hash=new URLSearchParams({r:cfg.repo,t:cfg.token,f:cfg.folder,m:qMode()}).toString();
+  return u.toString();
+}
+function qrSvg(text){
+  const q=qrcode(0,"M");q.addData(text);q.make();
+  const n=q.getModuleCount(),m=3;let d="";
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))d+=`M${c+m} ${r+m}h1v1h-1z`;
+  const z=n+2*m;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${z} ${z}" shape-rendering="crispEdges"><rect width="${z}" height="${z}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;
+}
+function qTick(){
+  if(qleft<=0){clearInterval(qiv);$("qb").textContent="Süre doldu. Yenile'ye bas.";$("qtm").textContent="";return}
+  $("qtm").textContent=`QR ${Math.floor(qleft/60)}:${String(qleft%60).padStart(2,"0")} sonra kapanır`;qleft--;
+}
+function qrDraw(){
+  clearInterval(qiv);const b=$("qb"),l=qrLink();
+  if(!l){b.textContent="Geçerli bir http(s) site adresi gir";$("qtm").textContent="";return}
+  if(typeof qrcode==="undefined"){b.textContent="QR kütüphanesi yüklenemedi. Bağlantıyı kopyalayıp telefona gönderebilirsin.";$("qtm").textContent="";return}
+  try{b.innerHTML=qrSvg(l)}catch{b.textContent="Bağlantı QR için çok uzun";return}
+  try{localStorage.setItem("dk-site",$("qs").value.trim())}catch{}
+  qleft=120;qTick();qiv=setInterval(qTick,1000);
+}
+$("qrb").onclick=()=>{
+  $("qs").value=/^https?:$/.test(location.protocol)?location.origin+location.pathname:(localStorage.getItem("dk-site")||"");
+  $("qd").showModal();qrDraw();
+};
+document.querySelectorAll("input[name=qm]").forEach(r=>r.onchange=qrDraw);
+$("qs").onchange=qrDraw;$("qn").onclick=qrDraw;
+$("qx").onclick=()=>$("qd").close();
+$("qd").onclose=()=>{clearInterval(qiv);$("qb").innerHTML="";$("qtm").textContent=""};
+$("qd").onclick=e=>{if(e.target===$("qd"))$("qd").close()};
+$("qc").onclick=async()=>{
+  const l=qrLink();if(!l)return toast("Önce geçerli bir site adresi gir","bad");
+  try{await navigator.clipboard.writeText(l);toast("Bağlantı kopyalandı","ok")}catch{prompt("Bağlantıyı kopyala:",l)}
+};
 $("cancel").onclick=mainView;
 $("out").onclick=async()=>{
   if(!await ask("Bağlantıyı kes","Token bu tarayıcıdan silinir. Dosyaların GitHub'daki depoda kalır.","Bağlantıyı kes"))return;
-  localStorage.removeItem(LS);cfg=null;items=[];sel.clear();queue=[];rq();["repo","tok"].forEach(i=>$(i).value="");
-  $("gear").classList.add("hide");$("chip").classList.add("hide");setupView(false);
+  localStorage.removeItem(LS);sessionStorage.removeItem(SS);cfg=null;items=[];sel.clear();queue=[];rq();["repo","tok"].forEach(i=>$(i).value="");
+  $("gear").classList.add("hide");$("qrb").classList.add("hide");$("chip").classList.add("hide");setupView(false);
 };
 
 /* yükleme */
 $("fi").onchange=e=>{addFiles(e.target.files);e.target.value=""};
+$("fc").onchange=e=>{addFiles(e.target.files);e.target.value=""};
+$("pick").onclick=()=>$("fi").click();$("cam").onclick=()=>$("fc").click();
 $("dz").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();$("fi").click()}};
 function addFiles(list){for(const f of list)queue.push(f.size>MAX?{f,st:"100 MB üstü",cls:"bad",p:0,big:1}:{f,st:"Bekliyor",cls:"",p:0});rq();if(!busy)run()}
 function rq(){
@@ -336,7 +426,7 @@ function render(){
   $("c1").textContent=items.length;$("c2").textContent=fmt(items.reduce((t,i)=>t+i.size,0));$("c3").textContent=info?fmt(info.size*1024):"–";
   $("rows").innerHTML=v.length?v.map(i=>{
     const t=tsOf(i.name),n=shown(i.name),e=ext(n),on=sel.has(i.name),a=E(i.name);
-    return `<div class="row ${on?"on":""}"><input type="checkbox" data-n="${a}" ${on?"checked":""} aria-label="Seç"><div class="nm"><span class="bd c-${cat(n)}">${E(e.slice(0,4)||"dos")}</span><b title="${E(n)}">${E(n)}</b></div><span class="sz">${fmt(i.size)}</span><span class="dt">${t?new Date(t).toLocaleString("tr-TR",{dateStyle:"short",timeStyle:"short"}):""}</span><div class="ac"><button data-a="dl" data-n="${a}">İndir</button><button class="dn" data-a="rm" data-n="${a}">Sil</button></div></div>`}).join("")
+    return `<div class="row ${on?"on":""}"><input type="checkbox" data-n="${a}" ${on?"checked":""} aria-label="Seç"><div class="nm"><span class="bd c-${cat(n)}">${E(e.slice(0,4)||"dos")}</span><div><b title="${E(n)}">${E(n)}</b><span class="meta">${fmt(i.size)}${t?" · "+new Date(t).toLocaleDateString("tr-TR"):""}</span></div></div><span class="sz">${fmt(i.size)}</span><span class="dt">${t?new Date(t).toLocaleString("tr-TR",{dateStyle:"short",timeStyle:"short"}):""}</span><div class="ac"><button data-a="dl" data-n="${a}">İndir</button><button class="dn" data-a="rm" data-n="${a}">Sil</button></div></div>`}).join("")
     :`<div class="empty">${items.length?"Aramayla eşleşen dosya yok.":"Henüz dosya yok. Yukarıya dosya bırakarak başla."}</div>`;
   $("all").checked=v.length>0&&v.every(i=>sel.has(i.name));
   $("sb").classList.toggle("hide",!sel.size);$("sn").textContent=sel.size+" seçili";
@@ -377,11 +467,24 @@ async function remove(names){
 }
 
 /* başlangıç */
+function fromHash(){
+  const p=new URLSearchParams(location.hash.slice(1)),r=p.get("r"),t=p.get("t");
+  if(!r||!t)return null;
+  history.replaceState(null,"",location.pathname+location.search);
+  return{c:{repo:parseRepo(r),token:t,folder:cleanFolder(p.get("f")||"dosyalar")},perm:p.get("m")!=="s"};
+}
 (async()=>{
-  rq();const c=load();
+  rq();const h=fromHash();
+  if(h){
+    busyOn("Bağlanılıyor…","QR ile giriş",true);const ok=await connect(h.c);busyOff();
+    if(ok){store(h.c,h.perm);mainView();toast(h.perm?"Bağlandı · bu cihazda kalıcı":"Bağlandı · tarayıcı kapanınca silinir","ok");return}
+    $("repo").value=h.c.repo;$("folder").value=h.c.folder;return setupView(false);
+  }
+  const c=load();
   if(!c)return setupView(false);
   $("repo").value=c.repo;$("folder").value=c.folder;$("tok").value=c.token;
-  if(await connect(c))mainView();else setupView(false);
+  busyOn("Bağlanılıyor…","",true);const ok=await connect(c);busyOff();
+  if(ok)mainView();else setupView(false);
 })();
 </script>
 </body>
