@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dosya Kasası</title>
+<style>
+:root{--bg:#f5f6f8;--cd:#fff;--bd:#e2e5ea;--tx:#15181c;--mu:#667080;--ac:#0e7a62;--ah:#0a6350;--ax:#fff;--as:#e4f4ee;--dn:#c0372b;--ds:#fdebe8;--sh:0 1px 2px rgba(16,24,40,.05),0 6px 20px rgba(16,24,40,.05)}
+[data-theme=dark]{--bg:#0d1012;--cd:#151a1d;--bd:#252c31;--tx:#e8ecef;--mu:#8995a0;--ac:#3ccaa4;--ah:#62dbbb;--ax:#05140f;--as:#10302a;--dn:#ff7d70;--ds:#3a1f1c;--sh:none}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--tx);font:14.5px/1.5 system-ui,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.hide{display:none!important}
+.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd)}
+.in{max-width:1000px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:10px}
+.logo{font-weight:700;font-size:16px;display:flex;align-items:center;gap:9px}
+.mk{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--ac);color:var(--ax)}
+.sp{flex:1}
+.chip{font-size:12.5px;color:var(--mu);border:1px solid var(--bd);border-radius:99px;padding:3px 11px;background:var(--cd);max-width:46vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wrap{max-width:1000px;margin:0 auto;padding:26px 18px 100px}
+button,.btn{font:inherit;font-weight:550;cursor:pointer;border:1px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:8px;padding:7px 13px;text-decoration:none;display:inline-block;transition:border-color .15s,background .15s}
+button:hover,.btn:hover{border-color:var(--ac)}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.pri{background:var(--ac);border-color:var(--ac);color:var(--ax)}.pri:hover{background:var(--ah);border-color:var(--ah)}
+.dn{color:var(--dn);border-color:color-mix(in srgb,var(--dn) 45%,var(--bd))}.dn:hover{background:var(--ds);border-color:var(--dn)}
+button:disabled{opacity:.55;cursor:wait}
+.ib{width:36px;height:36px;padding:0;font-size:16px}
+h1{font-size:26px;letter-spacing:-.02em;margin-bottom:6px}
+.lead{color:var(--mu);margin-bottom:22px;max-width:60ch}
+.two{display:grid;grid-template-columns:1.25fr 1fr;gap:26px;align-items:start}
+@media(max-width:860px){.two{grid-template-columns:1fr}}
+.steps{list-style:none;counter-reset:s;display:grid;gap:12px}
+.steps li{counter-increment:s;position:relative;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:14px 16px 14px 54px;box-shadow:var(--sh)}
+.steps li:before{content:counter(s);position:absolute;left:15px;top:14px;width:26px;height:26px;border-radius:50%;background:var(--as);color:var(--ac);font-weight:700;display:grid;place-items:center;font-size:13px}
+.steps h3{font-size:15px;margin-bottom:3px}.steps p{color:var(--mu);margin-bottom:8px}.steps p:last-child{margin:0}
+code{background:var(--as);color:var(--ac);padding:1px 6px;border-radius:5px;font-size:13px}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:18px;box-shadow:var(--sh)}
+form.card{position:sticky;top:76px}
+.card h2{font-size:16px;margin-bottom:12px}
+label{display:block;font-size:13px;color:var(--mu);margin:0 0 4px}
+input[type=text],input[type=password],select{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit;margin-bottom:13px}
+.err{background:var(--ds);color:var(--dn);border-radius:8px;padding:9px 12px;font-size:13px;margin-bottom:13px}
+.note{font-size:12.5px;color:var(--mu);margin-top:12px}
+.row2{display:flex;gap:8px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.st{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:13px 16px;box-shadow:var(--sh)}
+.st span{font-size:12.5px;color:var(--mu)}.st b{display:block;font-size:22px;letter-spacing:-.02em}
+.dz{border:1.5px dashed var(--bd);border-radius:12px;padding:26px 14px;text-align:center;color:var(--mu);cursor:pointer;background:var(--cd);transition:.15s;display:block}
+.dz:hover,.dz:focus-visible{border-color:var(--ac);background:var(--as);color:var(--tx)}
+.dz b{color:var(--tx)}.dz input{display:none}
+.queue{display:grid;gap:7px;margin-top:10px}
+.q{background:var(--cd);border:1px solid var(--bd);border-radius:9px;padding:8px 12px;font-size:13px;position:relative;overflow:hidden}
+.q div{display:flex;gap:10px;align-items:center;position:relative}
+.q .n{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.q .s{color:var(--mu);max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.q .s.ok{color:var(--ac)}.q .s.bad{color:var(--dn)}
+.q i{position:absolute;left:0;top:0;bottom:0;background:var(--as);width:0;transition:width .2s}
+.q .x{border:0;background:none;padding:0 4px;color:var(--mu)}
+.bar{display:flex;gap:10px;align-items:center;margin:22px 0 10px;flex-wrap:wrap}
+.bar h2{font-size:16px}.bar input,.bar select{margin:0;width:auto}.bar #q{width:210px}
+.list{background:var(--cd);border:1px solid var(--bd);border-radius:12px;overflow:hidden;box-shadow:var(--sh)}
+.row{display:grid;grid-template-columns:26px 1fr 84px 128px auto;gap:12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--bd)}
+.row:last-child{border-bottom:0}.row.on{background:var(--as)}
+.row.h{font-size:12px;color:var(--mu);background:var(--bg);padding:7px 14px;text-transform:uppercase;letter-spacing:.04em}
+.nm{display:flex;align-items:center;gap:10px;min-width:0}.nm b{font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sz,.dt{font-size:13px;color:var(--mu)}
+.ac{display:flex;gap:6px}.ac button{padding:4px 10px;font-size:13px}
+.bd{flex:none;min-width:38px;text-align:center;font-size:10.5px;font-weight:700;text-transform:uppercase;padding:4px 5px;border-radius:6px;background:color-mix(in srgb,currentColor 13%,transparent)}
+.c-img{color:#2563eb}.c-pdf{color:#dc2626}.c-doc{color:#0891b2}.c-arc{color:#d97706}.c-code{color:#7c3aed}.c-av{color:#db2777}.c-oth{color:var(--mu)}
+.empty{padding:34px 16px;text-align:center;color:var(--mu)}
+input[type=checkbox]{width:16px;height:16px;accent-color:var(--ac)}
+@media(max-width:720px){.row{grid-template-columns:26px 1fr auto}.sz,.dt{display:none}.st b{font-size:17px}}
+.sb{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:9px 12px 9px 18px;border-radius:12px;display:flex;gap:10px;align-items:center;box-shadow:0 8px 30px rgba(0,0,0,.3);z-index:8}
+.sb button{padding:5px 11px}
+dialog{margin:auto;border:1px solid var(--bd);border-radius:14px;background:var(--cd);color:var(--tx);padding:0;max-width:94vw;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(5,8,10,.6)}
+#cf{width:380px;padding:20px}#cf p{color:var(--mu);margin:6px 0 16px}#cf form{display:flex;gap:8px;justify-content:flex-end}
+.toasts{position:fixed;right:18px;bottom:18px;display:grid;gap:8px;z-index:20;max-width:min(380px,90vw)}
+.toast{background:var(--tx);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast.bad{background:var(--dn);color:#fff}
+.busy{position:fixed;inset:0;z-index:40;display:grid;place-items:center;pointer-events:none}
+.busy.blk{pointer-events:auto;background:rgba(5,8,10,.35);backdrop-filter:blur(2px);cursor:progress}
+.bx{display:flex;align-items:center;gap:14px;background:var(--cd);color:var(--tx);border:1px solid var(--bd);border-radius:14px;padding:16px 22px;box-shadow:0 20px 60px rgba(0,0,0,.35);max-width:min(420px,90vw);animation:pop .15s ease-out}
+.bx div{min-width:0}.bx b{display:block;font-size:15px}.bx small{display:block;color:var(--mu);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.spin{flex:none;width:24px;height:24px;border-radius:50%;border:3px solid var(--as);border-top-color:var(--ac);animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}@keyframes pop{from{opacity:0;transform:scale(.94)}}
+.ov{position:fixed;inset:0;background:color-mix(in srgb,var(--ac) 20%,transparent);border:3px dashed var(--ac);display:none;place-items:center;font-size:22px;font-weight:700;z-index:30;pointer-events:none;backdrop-filter:blur(3px)}
+.ov.on{display:grid}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <div class="logo"><span class="mk">▣</span>Dosya Kasası</div>
+  <div class="sp"></div>
+  <span id="chip" class="chip hide"></span>
+  <button id="th" class="ib" title="Tema" aria-label="Temayı değiştir">◐</button>
+  <button id="gear" class="ib hide" title="Bağlantı ayarları" aria-label="Ayarlar">⚙</button>
+</div></header>
+
+<main class="wrap">
+<section id="setup" class="hide">
+  <h1>Özel dosya kasanı kur</h1>
+  <p class="lead">Dosyaların kendi özel GitHub deponda durur. Kart, sunucu ya da ek yazılım gerekmez, kurulum yaklaşık 3 dakika sürer.</p>
+  <div class="two">
+    <ol class="steps">
+      <li><h3>Özel bir depo oluştur</h3><p>GitHub'da yeni depo sayfasını aç. Bir ad ver (örn. <code>depo</code>), görünürlüğü <b>Private</b> seç, <b>Add a README file</b>'ı işaretle ve <b>Create repository</b>'ye bas.</p><a class="btn" target="_blank" rel="noopener" href="https://github.com/new">Depo oluştur ↗</a></li>
+      <li><h3>Token sayfasını aç</h3><p><b>Token name</b> alanına <code>dosya-kasasi</code> yaz. <b>Expiration</b> için 90 gün ya da özel bir tarih seç. <b>Resource owner</b> kendi hesabın olmalı.</p><a class="btn" target="_blank" rel="noopener" href="https://github.com/settings/personal-access-tokens/new">Token sayfası ↗</a></li>
+      <li><h3>Erişimi tek depoya sınırla</h3><p><b>Repository access</b> bölümünde <b>Only select repositories</b>'i seç ve oluşturduğun depoyu işaretle. Sonra <b>Permissions → Add permissions</b> ile <b>Contents</b>'i ekle, erişimi <b>Read and write</b> yap. Başka izin verme.</p></li>
+      <li><h3>Token'ı kopyala</h3><p><b>Generate token</b>'a bas. <code>github_pat_…</code> ile başlayan değeri hemen kopyala, sayfadan çıkınca bir daha gösterilmez.</p></li>
+      <li><h3>Buraya yapıştır ve bağlan</h3><p>Sağdaki forma <code>kullanici/depo</code> biçiminde depo adını ve token'ı gir. Depo herkese açıksa bağlanmayı reddeder.</p></li>
+    </ol>
+    <form class="card" id="form" autocomplete="off">
+      <h2>Bağlantı</h2>
+      <div id="err" class="err hide" role="alert"></div>
+      <label for="repo">Depo (kullanici/depo-adi)</label>
+      <input type="text" id="repo" placeholder="ornek/depo" required>
+      <label for="tok">Fine-grained token</label>
+      <input type="password" id="tok" placeholder="github_pat_…">
+      <label for="folder">Klasör (depo içinde)</label>
+      <input type="text" id="folder" value="dosyalar">
+      <div class="row2">
+        <button class="pri" id="go" type="submit">Bağlan</button>
+        <button type="button" id="cancel" class="hide">Vazgeç</button>
+        <button type="button" id="out" class="dn hide">Bağlantıyı kes</button>
+      </div>
+      <p class="note">Token yalnızca bu tarayıcının localStorage'ında saklanır. Ortak bilgisayarda işin bitince bağlantıyı kes.</p>
+    </form>
+  </div>
+</section>
+
+<section id="main" class="hide">
+  <div class="stats">
+    <div class="st"><span>Dosya</span><b id="c1">0</b></div>
+    <div class="st"><span>Klasör boyutu</span><b id="c2">0</b></div>
+    <div class="st"><span>Depo boyutu</span><b id="c3">–</b></div>
+  </div>
+  <label class="dz" id="dz" tabindex="0">
+    <input type="file" id="fi" multiple>
+    <b>Dosyaları buraya bırak</b>, seçmek için tıkla ya da Ctrl+V ile yapıştır<br><span style="font-size:12.5px">Yükleme otomatik başlar · en fazla 100 MB, 25 MB üstü başarısız olabilir</span>
+  </label>
+  <div class="queue" id="queue"></div>
+
+  <div class="bar">
+    <h2>Dosyalar</h2><div class="sp"></div>
+    <input type="text" id="q" placeholder="Ara ( / )" aria-label="Ara">
+    <select id="sort" aria-label="Sırala"><option value="new">En yeni</option><option value="old">En eski</option><option value="name">Ada göre</option><option value="size">Boyuta göre</option></select>
+    <button id="rf">Yenile</button>
+  </div>
+  <div class="list">
+    <div class="row h"><input type="checkbox" id="all" aria-label="Tümünü seç"><span>Ad</span><span class="sz">Boyut</span><span class="dt">Tarih</span><span></span></div>
+    <div id="rows"></div>
+  </div>
+</section>
+</main>
+
+<div class="sb hide" id="sb"><b id="sn"></b><button id="sdl">İndir</button><button id="srm" class="dn">Sil</button><button id="sx">Vazgeç</button></div>
+<dialog id="cf"><h3 id="cft"></h3><p id="cfx"></p><form method="dialog"><button value="no">Vazgeç</button><button value="ok" class="dn" id="cfok">Sil</button></form></dialog>
+<div class="toasts" id="toasts"></div>
+<div class="busy hide" id="busy" role="status" aria-live="polite"><div class="bx"><span class="spin"></span><div><b id="bt"></b><small id="bs"></small></div></div></div>
+<div class="ov" id="ov">Yüklemek için bırak</div>
+
+<script>
+const LS="dosya-kasasi-v2",API="https://api.github.com",MAX=100*1048576;
+const $=id=>document.getElementById(id);
+const E=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=n=>n>=1073741824?(n/1073741824).toFixed(2)+" GB":n>=1048576?(n/1048576).toFixed(1)+" MB":n>=1024?Math.round(n/1024)+" KB":n+" B";
+const ext=n=>n.includes(".")?n.split(".").pop().toLowerCase():"";
+const tsOf=n=>{const m=n.match(/^(\d{13})_/);return m?+m[1]:0},shown=n=>n.replace(/^\d{13}_/,"");
+const CAT={img:"png jpg jpeg gif webp svg bmp ico avif",pdf:"pdf",doc:"doc docx odt rtf txt md xls xlsx csv ppt pptx",arc:"zip rar 7z tar gz",code:"js ts json html css py java c cpp xml yml yaml sh sql",av:"mp3 wav ogg mp4 webm mov mkv"};
+const cat=n=>{const e=ext(n);for(const k in CAT)if(CAT[k].split(" ").includes(e))return k;return"oth"};
+let cfg=null,info=null,items=[],sel=new Set(),queue=[],busy=false,seq=0;
+
+/* tema */
+const root=document.documentElement;
+root.dataset.theme=localStorage.getItem("dk-theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+$("th").onclick=()=>{const t=root.dataset.theme==="dark"?"light":"dark";root.dataset.theme=t;localStorage.setItem("dk-theme",t)};
+
+function toast(m,t){const d=document.createElement("div");d.className="toast "+(t||"");d.textContent=m;$("toasts").appendChild(d);setTimeout(()=>d.remove(),t==="bad"?6500:3200)}
+function busyOn(t,sub,block){const b=$("busy");b.classList.remove("hide");b.classList.toggle("blk",!!block);$("bt").textContent=t;$("bs").textContent=sub||""}
+function busyOff(){$("busy").classList.add("hide")}
+function fail(e){toast(e.message,"bad");if(/^401/.test(e.message))setupView(true)}
+function ask(t,x,ok){return new Promise(r=>{$("cft").textContent=t;$("cfx").textContent=x;$("cfok").textContent=ok;const d=$("cf");d.returnValue="";d.onclose=()=>r(d.returnValue==="ok");d.showModal()})}
+
+/* GitHub API */
+async function gh(method,path,body){
+  try{return await fetch(API+path,{method,headers:{Authorization:"Bearer "+cfg.token,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",...(body?{"Content-Type":"application/json"}:{})},body:body?JSON.stringify(body):undefined})}
+  catch{throw new Error("api.github.com'a ulaşılamadı. Ağ engeli ya da bağlantı sorunu olabilir.")}
+}
+async function ghErr(r){let m="";try{m=(await r.json()).message||""}catch{}
+  if(r.status===401)m="Token geçersiz ya da süresi dolmuş, yenisini gir. "+m;
+  if(r.status===403&&/rate limit/i.test(m))m+=" Biraz bekleyip tekrar dene.";
+  else if(r.status===403||r.status===404)m+=" (token'da Contents: Read and write izni var mı?)";
+  return r.status+" "+m.trim()}
+const base=()=>`/repos/${cfg.repo}/contents/${cfg.folder.split("/").map(encodeURIComponent).join("/")}`;
+const fpath=n=>`${base()}/${encodeURIComponent(n)}`;
+async function listFiles(){
+  const r=await gh("GET",base());if(r.status===404)return[];
+  if(!r.ok)throw new Error(await ghErr(r));
+  const d=await r.json();if(!Array.isArray(d))return[];
+  return d.filter(f=>f.type==="file"&&f.name!==".gitkeep").map(f=>({name:f.name,size:f.size,sha:f.sha}));
+}
+const b64=f=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(",")[1]||"");r.onerror=()=>no(new Error("Dosya okunamadı"));r.readAsDataURL(f)});
+function put(name,file,onp){return new Promise(async(ok,no)=>{
+  let content;try{content=await b64(file)}catch(e){return no(e)}
+  const x=new XMLHttpRequest();x.open("PUT",API+fpath(name));
+  x.setRequestHeader("Authorization","Bearer "+cfg.token);x.setRequestHeader("Accept","application/vnd.github+json");
+  x.setRequestHeader("X-GitHub-Api-Version","2022-11-28");x.setRequestHeader("Content-Type","application/json");
+  x.upload.onprogress=e=>e.lengthComputable&&onp(e.loaded/e.total);
+  x.onload=()=>{if(x.status<300)return ok();let m="";try{m=JSON.parse(x.responseText).message}catch{}no(new Error(x.status+" "+m))};
+  x.onerror=()=>no(new Error("Ağ hatası"));
+  x.send(JSON.stringify({message:"Yükle: "+file.name,content}))})}
+
+/* indirme: Git Blob API (JSON + base64). Yönlendirme/CORS sorunu yaşatmaz. */
+async function blobOf(it){
+  const r=await gh("GET",`/repos/${cfg.repo}/git/blobs/${it.sha}`);
+  if(!r.ok)throw new Error(await ghErr(r));
+  const d=await r.json();
+  if(d.encoding!=="base64")throw new Error("Beklenmeyen dosya biçimi");
+  return (await fetch("data:application/octet-stream;base64,"+d.content.replace(/\s/g,""))).blob();
+}
+async function save(name){
+  const it=items.find(i=>i.name===name);
+  if(!it){toast("Dosya bulunamadı, listeyi yenile","bad");return false}
+  try{
+    const b=await blobOf(it),a=document.createElement("a"),u=URL.createObjectURL(b);
+    a.href=u;a.download=shown(name);document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(u),10000);return true;
+  }catch(e){fail(e);return false}
+}
+
+/* bağlantı */
+const load=()=>{try{return JSON.parse(localStorage.getItem(LS)||"null")}catch{return null}};
+const parseRepo=v=>{const p=v.trim().replace(/^https?:\/\/github\.com\//i,"").replace(/\.git$/i,"").replace(/^\/+|\/+$/g,"").split("/");return p.length>=2&&p[0]&&p[1]?p[0]+"/"+p[1]:""};
+const cleanFolder=v=>v.trim().replace(/^\/+|\/+$/g,"").replace(/[^\p{L}\p{N}._\-\/ ]/gu,"_")||"dosyalar";
+async function connect(c){
+  const prev=cfg;cfg=c;
+  try{
+    const r=await gh("GET","/repos/"+c.repo);
+    if(r.status===404)throw new Error("Depo bulunamadı ya da token bu depoya erişemiyor. Depo adını ve token'daki \"Only select repositories\" seçimini kontrol et.");
+    if(!r.ok)throw new Error(await ghErr(r));
+    info=await r.json();
+    if(!info.private)throw new Error("Bu depo herkese açık (public). Settings → Danger Zone → Change visibility ile Private yap.");
+    if(info.permissions&&info.permissions.push===false)throw new Error("Token'ın yazma izni yok. Contents: Read and write ver.");
+    items=await listFiles();return true;
+  }catch(e){cfg=prev;$("err").textContent=e.message;$("err").classList.remove("hide");return false}
+}
+function setupView(connected){
+  $("setup").classList.remove("hide");$("main").classList.add("hide");
+  $("cancel").classList.toggle("hide",!connected);$("out").classList.toggle("hide",!connected);
+  if(connected&&cfg){$("repo").value=cfg.repo;$("folder").value=cfg.folder;$("tok").value="";$("tok").placeholder="Boş bırakırsan mevcut token kullanılır"}
+  else $("tok").placeholder="github_pat_…";
+}
+function mainView(){
+  $("setup").classList.add("hide");$("main").classList.remove("hide");
+  $("gear").classList.remove("hide");$("chip").classList.remove("hide");
+  $("chip").textContent=`${cfg.repo} · ${cfg.folder} · özel`;sel.clear();render();
+}
+$("form").onsubmit=async e=>{
+  e.preventDefault();$("err").classList.add("hide");
+  const c={repo:parseRepo($("repo").value),token:$("tok").value.trim()||(cfg&&cfg.token)||(load()||{}).token||"",folder:cleanFolder($("folder").value)};
+  if(!c.repo||!c.token){$("err").textContent="Depo (kullanici/depo) ve token gerekli.";$("err").classList.remove("hide");return}
+  $("go").disabled=true;$("go").textContent="Bağlanıyor…";
+  const ok=await connect(c);$("go").disabled=false;$("go").textContent="Bağlan";
+  if(!ok)return;
+  localStorage.setItem(LS,JSON.stringify(c));mainView();toast("Bağlandı","ok");
+};
+$("gear").onclick=()=>setupView(true);
+$("cancel").onclick=mainView;
+$("out").onclick=async()=>{
+  if(!await ask("Bağlantıyı kes","Token bu tarayıcıdan silinir. Dosyaların GitHub'daki depoda kalır.","Bağlantıyı kes"))return;
+  localStorage.removeItem(LS);cfg=null;items=[];sel.clear();queue=[];rq();["repo","tok"].forEach(i=>$(i).value="");
+  $("gear").classList.add("hide");$("chip").classList.add("hide");setupView(false);
+};
+
+/* yükleme */
+$("fi").onchange=e=>{addFiles(e.target.files);e.target.value=""};
+$("dz").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();$("fi").click()}};
+function addFiles(list){for(const f of list)queue.push(f.size>MAX?{f,st:"100 MB üstü",cls:"bad",p:0,big:1}:{f,st:"Bekliyor",cls:"",p:0});rq();if(!busy)run()}
+function rq(){
+  $("queue").innerHTML=queue.map((q,i)=>`<div class="q"><i style="width:${q.p*100}%"></i><div><span class="n">${E(q.f.name)}</span><span>${fmt(q.f.size)}</span><span class="s ${q.cls}" title="${E(q.st)}">${E(q.st)}</span>${q.cls==="bad"&&!q.big?`<button class="x" data-r="${i}" title="Tekrar dene" aria-label="Tekrar dene">↻</button>`:""}${q.cls==="bad"?`<button class="x" data-i="${i}" aria-label="Kaldır">✕</button>`:""}</div></div>`).join("");
+}
+$("queue").onclick=e=>{
+  const x=e.target.closest(".x");if(!x)return;
+  if(x.dataset.i!==undefined){queue.splice(+x.dataset.i,1);rq()}
+  else{const q=queue[+x.dataset.r];if(q){q.cls="";q.st="Bekliyor";q.p=0;rq();if(!busy)run()}}
+};
+async function run(){
+  busy=true;
+  const tot=()=>queue.filter(x=>!x.big).length,dn=()=>queue.filter(x=>x.cls==="ok"||(x.cls==="bad"&&!x.big)).length;
+  const upd=q=>busyOn("Yükleniyor…",`${Math.min(dn()+1,tot())} / ${tot()} · ${q.f.name} · ${q.st}`,false);
+  for(const q of queue){
+    if(q.cls)continue;
+    q.st="0%";rq();upd(q);
+    const n=(Date.now()+(seq++%1000))+"_"+q.f.name.replace(/[^\p{L}\p{N}._\-]/gu,"_");
+    for(let t=0;t<3;t++){
+      try{await put(n,q.f,p=>{q.p=p;q.st=Math.round(p*100)+"%";rq();upd(q)});q.cls="ok";q.st="Tamam";q.p=1;break}
+      catch(e){
+        if(/^(409|5\d\d)/.test(e.message)&&t<2){await new Promise(r=>setTimeout(r,900*(t+1)));continue}
+        q.cls="bad";q.st=e.message;if(/^401/.test(e.message))fail(e);break;
+      }
+    }
+    rq();
+  }
+  busy=false;busyOff();
+  const ok=queue.filter(q=>q.cls==="ok").length;if(ok)toast(ok+" dosya yüklendi","ok");
+  await refresh();
+  setTimeout(()=>{queue=queue.filter(q=>q.cls!=="ok");rq()},2500);
+}
+let dc=0;
+addEventListener("dragenter",e=>{if(!cfg||$("main").classList.contains("hide"))return;e.preventDefault();dc++;$("ov").classList.add("on")});
+addEventListener("dragleave",()=>{if(--dc<=0){dc=0;$("ov").classList.remove("on")}});
+addEventListener("dragover",e=>e.preventDefault());
+addEventListener("drop",e=>{e.preventDefault();dc=0;$("ov").classList.remove("on");if(cfg&&!$("main").classList.contains("hide")&&e.dataTransfer.files.length)addFiles(e.dataTransfer.files)});
+addEventListener("paste",e=>{if(cfg&&!$("main").classList.contains("hide")&&e.clipboardData.files.length)addFiles(e.clipboardData.files)});
+addEventListener("keydown",e=>{
+  const tag=document.activeElement.tagName;
+  if(e.key==="/"&&cfg&&!/INPUT|TEXTAREA|SELECT/.test(tag)){e.preventDefault();$("q").focus()}
+  if(e.key==="Escape"&&sel.size&&!document.querySelector("dialog[open]")){sel.clear();render()}
+});
+
+/* liste */
+async function refresh(){
+  busyOn("Liste güncelleniyor…","",false);
+  try{
+    items=await listFiles();const r=await gh("GET","/repos/"+cfg.repo);if(r.ok)info=await r.json();
+    if(items.length>=1000)toast("Klasörde 1000 dosyaya ulaşıldı, GitHub bundan fazlasını listelemez. Ayarlardan yeni klasör seç.","bad");
+  }catch(e){fail(e)}
+  busyOff();
+  sel=new Set([...sel].filter(n=>items.some(i=>i.name===n)));render();
+}
+function view(){
+  const q=$("q").value.trim().toLocaleLowerCase("tr"),s=$("sort").value;
+  const f={new:(x,y)=>tsOf(y.name)-tsOf(x.name),old:(x,y)=>tsOf(x.name)-tsOf(y.name),name:(x,y)=>shown(x.name).localeCompare(shown(y.name),"tr"),size:(x,y)=>y.size-x.size}[s];
+  return items.filter(i=>!q||shown(i.name).toLocaleLowerCase("tr").includes(q)).sort(f);
+}
+function render(){
+  const v=view();
+  $("c1").textContent=items.length;$("c2").textContent=fmt(items.reduce((t,i)=>t+i.size,0));$("c3").textContent=info?fmt(info.size*1024):"–";
+  $("rows").innerHTML=v.length?v.map(i=>{
+    const t=tsOf(i.name),n=shown(i.name),e=ext(n),on=sel.has(i.name),a=E(i.name);
+    return `<div class="row ${on?"on":""}"><input type="checkbox" data-n="${a}" ${on?"checked":""} aria-label="Seç"><div class="nm"><span class="bd c-${cat(n)}">${E(e.slice(0,4)||"dos")}</span><b title="${E(n)}">${E(n)}</b></div><span class="sz">${fmt(i.size)}</span><span class="dt">${t?new Date(t).toLocaleString("tr-TR",{dateStyle:"short",timeStyle:"short"}):""}</span><div class="ac"><button data-a="dl" data-n="${a}">İndir</button><button class="dn" data-a="rm" data-n="${a}">Sil</button></div></div>`}).join("")
+    :`<div class="empty">${items.length?"Aramayla eşleşen dosya yok.":"Henüz dosya yok. Yukarıya dosya bırakarak başla."}</div>`;
+  $("all").checked=v.length>0&&v.every(i=>sel.has(i.name));
+  $("sb").classList.toggle("hide",!sel.size);$("sn").textContent=sel.size+" seçili";
+}
+$("rows").onclick=async e=>{
+  const b=e.target.closest("button[data-a]");if(!b)return;const n=b.dataset.n;
+  if(b.dataset.a==="dl"){busyOn("İndiriliyor…",shown(n),true);await save(n);busyOff()}
+  else remove([n]);
+};
+$("rows").onchange=e=>{const c=e.target;if(c.dataset.n){c.checked?sel.add(c.dataset.n):sel.delete(c.dataset.n);render()}};
+$("all").onchange=e=>{view().forEach(i=>e.target.checked?sel.add(i.name):sel.delete(i.name));render()};
+$("q").oninput=render;$("sort").onchange=render;
+$("rf").onclick=async()=>{$("rf").disabled=true;await refresh();$("rf").disabled=false};
+$("sx").onclick=()=>{sel.clear();render()};
+$("sdl").onclick=async()=>{
+  const list=[...sel];let n=0;
+  for(let i=0;i<list.length;i++){busyOn("İndiriliyor…",`${i+1} / ${list.length} · ${shown(list[i])}`,true);if(await save(list[i]))n++;await new Promise(r=>setTimeout(r,400))}
+  busyOff();if(n)toast(n+" dosya indirildi","ok");
+};
+$("srm").onclick=()=>remove([...sel]);
+
+async function remove(names){
+  if(!await ask(names.length>1?names.length+" dosya silinsin mi?":"Dosya silinsin mi?",names.length===1?shown(names[0]):"Bu işlem geri alınamaz. Git geçmişinde eski sürümler durur.","Sil"))return;
+  let bad=0,first="",i=0;
+  for(const n of names){
+    i++;busyOn("Siliniyor…",`${i} / ${names.length} · ${shown(n)}`,true);
+    const it=items.find(x=>x.name===n);
+    try{
+      if(!it)throw new Error("Dosya bulunamadı");
+      const r=await gh("DELETE",fpath(n),{message:"Sil: "+shown(n),sha:it.sha});
+      if(!r.ok)throw new Error(await ghErr(r));
+      items=items.filter(x=>x.name!==n);sel.delete(n);render();
+    }catch(e){bad++;first=first||e.message}
+  }
+  busyOff();
+  bad?toast(`${names.length-bad} silindi, ${bad} silinemedi: ${first}`,"bad"):toast(names.length+" dosya silindi","ok");
+  refresh();
+}
+
+/* başlangıç */
+(async()=>{
+  rq();const c=load();
+  if(!c)return setupView(false);
+  $("repo").value=c.repo;$("folder").value=c.folder;$("tok").value=c.token;
+  if(await connect(c))mainView();else setupView(false);
+})();
+</script>
+</body>
+</html>
