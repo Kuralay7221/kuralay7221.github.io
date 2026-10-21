@@ -30,7 +30,8 @@ button:hover,.btn:hover{border-color:var(--ac)}
 button:disabled{opacity:.55;cursor:wait}
 .ib{width:38px;height:38px;padding:0;font-size:16px}
 h1{font-size:26px;letter-spacing:-.02em;margin-bottom:6px}
-.lead{color:var(--mu);margin-bottom:22px;max-width:60ch}
+.lead{color:var(--mu);margin-bottom:16px;max-width:60ch}
+.scanbtn{width:100%;max-width:420px;padding:12px;font-size:15px;margin-bottom:22px}
 .two{display:grid;grid-template-columns:1.25fr 1fr;gap:26px;align-items:start}
 .steps{list-style:none;counter-reset:s;display:grid;gap:12px;padding:0}
 .steps li{counter-increment:s;position:relative;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:14px 16px 14px 54px;box-shadow:var(--sh)}
@@ -86,11 +87,20 @@ dialog::backdrop{background:rgba(5,8,10,.6)}
 .qt{text-align:center;color:var(--mu);font-size:13px;margin-bottom:12px;min-height:20px}
 .qw{background:var(--ds);color:var(--dn);border-radius:8px;padding:9px 12px;font-size:12.5px;margin-bottom:12px}
 #cf{width:380px;padding:20px}#cf p{color:var(--mu);margin:6px 0 16px;word-break:break-word}#cf form{display:flex;gap:8px;justify-content:flex-end}
-#pv{width:min(900px,94vw);display:flex;flex-direction:column}
+/* önizleme: flex yalnızca açıkken uygulanır, kapalıyken dialog gizli kalır */
+#pv{width:min(900px,94vw);flex-direction:column}
 #pv[open]{display:flex}
 .ph{display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--bd)}.ph b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pb{overflow:auto;padding:12px;display:grid;place-items:center;min-height:200px}
 .pb img,.pb video{max-width:100%;max-height:70dvh}.pb iframe{width:100%;height:70dvh;border:0}.pb pre{width:100%;white-space:pre-wrap;word-break:break-word;font-size:13px}
+/* QR tarayıcı */
+#sc{width:min(460px,94vw);flex-direction:column}
+#sc[open]{display:flex}
+.sbx{padding:12px;display:grid;gap:10px}
+.vbox{position:relative;width:100%;aspect-ratio:1;background:#000;border-radius:12px;overflow:hidden}
+.vbox video{width:100%;height:100%;object-fit:cover;display:block}
+.vbox:after{content:"";position:absolute;inset:18%;border:3px solid rgba(255,255,255,.85);border-radius:14px;pointer-events:none}
+.sm{text-align:center;color:var(--mu);font-size:13px;min-height:20px}
 .sb{position:fixed;left:50%;bottom:calc(22px + var(--sa));transform:translateX(-50%);width:max-content;max-width:calc(100vw - 24px);background:var(--tx);color:var(--bg);padding:9px 12px 9px 18px;border-radius:12px;display:flex;gap:10px;align-items:center;box-shadow:0 8px 30px rgba(0,0,0,.3);z-index:8}
 .sb button{padding:6px 12px}
 .toasts{position:fixed;right:18px;bottom:18px;display:grid;gap:8px;z-index:50;max-width:min(380px,90vw);pointer-events:none}
@@ -111,6 +121,7 @@ dialog::backdrop{background:rgba(5,8,10,.6)}
 input[type=text],input[type=password],select{font-size:16px;min-height:44px}
 .in{padding:10px 12px}.chip{display:none}.wrap{padding:16px 12px calc(120px + var(--sa))}h1{font-size:22px}
 button,.btn{min-height:44px}.ib{width:44px;height:44px}
+.scanbtn{max-width:none}
 .st b{font-size:17px}.st{padding:10px 12px}.dz{padding:20px 12px}
 .bar #q{flex:1;width:auto;min-width:0}.bar select{flex:1}.bar h2,.bar .sp{display:none}
 .row{grid-template-columns:28px 1fr;gap:6px 10px;padding:12px}
@@ -139,13 +150,14 @@ input[type=checkbox]{width:22px;height:22px}
 <section id="setup" class="hide">
   <h1>Özel dosya kasanı kur</h1>
   <p class="lead">Dosyaların kendi özel GitHub deponda durur. Kart, sunucu ya da ek yazılım gerekmez, kurulum yaklaşık 3 dakika sürer.</p>
+  <button type="button" id="scan" class="pri scanbtn">📷 QR ile bağlan</button>
   <div class="two">
     <ol class="steps">
       <li><h3>Özel bir depo oluştur</h3><p>GitHub'da yeni depo sayfasını aç. Bir ad ver (örn. <code>depo</code>), görünürlüğü <b>Private</b> seç, <b>Add a README file</b>'ı işaretle ve <b>Create repository</b>'ye bas.</p><a class="btn" target="_blank" rel="noopener" href="https://github.com/new">Depo oluştur ↗</a></li>
       <li><h3>Token sayfasını aç</h3><p><b>Token name</b> alanına <code>dosya-kasasi</code> yaz. <b>Expiration</b> için 90 gün ya da özel bir tarih seç. <b>Resource owner</b> kendi hesabın olmalı.</p><a class="btn" target="_blank" rel="noopener" href="https://github.com/settings/personal-access-tokens/new">Token sayfası ↗</a></li>
       <li><h3>Erişimi tek depoya sınırla</h3><p><b>Repository access</b> bölümünde <b>Only select repositories</b>'i seç ve depoyu işaretle. Sonra <b>Permissions → Add permissions</b> ile <b>Contents</b>'i ekle, erişimi <b>Read and write</b> yap. Başka izin verme.</p></li>
       <li><h3>Token'ı kopyala</h3><p><b>Generate token</b>'a bas. <code>github_pat_…</code> ile başlayan değeri hemen kopyala, sayfadan çıkınca bir daha gösterilmez.</p></li>
-      <li><h3>Buraya yapıştır ve bağlan</h3><p>Forma <code>kullanici/depo</code> biçiminde depo adını ve token'ı gir. Depo herkese açıksa bağlanmayı reddeder.</p></li>
+      <li><h3>Buraya yapıştır ve bağlan</h3><p>Forma <code>kullanici/depo</code> biçiminde depo adını ve token'ı gir. Depo herkese açıksa bağlanmayı reddeder. Başka bir cihazda zaten bağlıysan, oradaki 📱 butonunun QR'ını yukarıdaki <b>QR ile bağlan</b> ile okutabilirsin.</p></li>
     </ol>
     <form class="card" id="form" autocomplete="off">
       <h2>Bağlantı</h2>
@@ -197,8 +209,17 @@ input[type=checkbox]{width:22px;height:22px}
 <div class="sb hide" id="sb"><b id="sn"></b><button type="button" id="sdl">İndir</button><button type="button" id="srm" class="dn">Sil</button><button type="button" id="sx">Vazgeç</button></div>
 <dialog id="cf"><h3 id="cft"></h3><p id="cfx"></p><form method="dialog"><button value="no">Vazgeç</button><button value="ok" class="dn" id="cfok">Sil</button></form></dialog>
 <dialog id="pv"><div class="ph"><b id="pvt"></b><button type="button" id="pvd">İndir</button><button type="button" id="pvx">Kapat</button></div><div class="pb" id="pvb"></div></dialog>
+<dialog id="sc">
+  <div class="ph"><b>QR kodu okut</b><button type="button" id="scx">Kapat</button></div>
+  <div class="sbx">
+    <div class="vbox"><video id="sv" playsinline muted></video></div>
+    <div class="sm" id="sm"></div>
+    <button type="button" id="sf">Fotoğraftan oku</button>
+  </div>
+</dialog>
+<input type="file" id="sfi" class="vh" accept="image/*" tabindex="-1">
 <dialog id="qd">
-  <h3>Telefonu QR ile bağla</h3><p class="sub">Telefon kamerasıyla okut, site açılır, bağlanır ve dosya yüklemeye hazır olur.</p>
+  <h3>Telefonu QR ile bağla</h3><p class="sub">Telefonda sitenin kurulum ekranındaki <b>QR ile bağlan</b> butonuyla ya da telefon kamerasıyla okut. Site açılır, bağlanır ve dosya yüklemeye hazır olur.</p>
   <div class="seg">
     <label class="on"><input type="radio" name="qm" value="p" checked><b>Kalıcı</b><small>Telefon bağlantıyı hatırlar</small></label>
     <label><input type="radio" name="qm" value="s"><b>Tek seferlik</b><small>Tarayıcı kapanınca silinir</small></label>
@@ -214,6 +235,7 @@ input[type=checkbox]{width:22px;height:22px}
 <div class="ov" id="ov">Yüklemek için bırak</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
 <script>
 const LS="dosya-kasasi-v2",SS="dosya-kasasi-s",API="https://api.github.com",MAX=100*1048576;
 const $=id=>document.getElementById(id);
@@ -300,7 +322,7 @@ async function preview(name){
     el=document.createElement({img:"img",pdf:"iframe",vid:"video",aud:"audio"}[k]);el.src=u;
     if(k==="vid"||k==="aud"){el.controls=true;el.playsInline=true}if(k==="img")el.alt=shown(name)}
   box.appendChild(el);$("pvt").textContent=shown(name);$("pvd").onclick=()=>dlBlob(b,name);
-  const d=$("pv");d.onclose=()=>{box.replaceChildren();if(u)URL.revokeObjectURL(u)};d.showModal();
+  const d=$("pv");d.onclose=()=>{box.replaceChildren();if(u)URL.revokeObjectURL(u)};if(!d.open)d.showModal();
 }
 $("pvx").onclick=()=>$("pv").close();
 $("pv").onclick=e=>{if(e.target===$("pv"))$("pv").close()};
@@ -351,7 +373,7 @@ $("form").onsubmit=async e=>{
 };
 $("gear").onclick=()=>setupView(true);
 
-/* QR ile telefon bağlama */
+/* QR ile telefon bağlama (QR üretme) */
 let qiv=0,qleft=0;
 const qMode=()=>document.querySelector("input[name=qm]:checked").value;
 function qrLink(){
@@ -392,6 +414,81 @@ $("qc").onclick=async()=>{
   const l=qrLink();if(!l)return toast("Önce geçerli bir site adresi gir","bad");
   try{await navigator.clipboard.writeText(l);toast("Bağlantı kopyalandı","ok")}catch{prompt("Bağlantıyı kopyala:",l)}
 };
+
+/* QR ile bağlan (kamera ile okuma) */
+let scStream=null,scTimer=0;
+function parseQr(text){
+  let u;try{u=new URL(String(text).trim())}catch{return null}
+  const p=new URLSearchParams(u.hash.slice(1)),r=p.get("r"),t=p.get("t");
+  if(!r||!t)return null;
+  return{c:{repo:parseRepo(r),token:t,folder:cleanFolder(p.get("f")||"dosyalar")},perm:p.get("m")!=="s"};
+}
+function stopScan(){
+  clearTimeout(scTimer);
+  if(scStream){scStream.getTracks().forEach(t=>t.stop());scStream=null}
+  $("sv").srcObject=null;
+}
+async function useQr(text){
+  const h=parseQr(text);if(!h)return false;
+  stopScan();if($("sc").open)$("sc").close();
+  $("err").classList.add("hide");
+  busyOn("Bağlanılıyor…","QR ile giriş",true);const ok=await connect(h.c);busyOff();
+  if(ok){store(h.c,h.perm);mainView();toast(h.perm?"Bağlandı · bu cihazda kalıcı":"Bağlandı · tarayıcı kapanınca silinir","ok")}
+  else{$("repo").value=h.c.repo;$("folder").value=h.c.folder}
+  return true;
+}
+function decodeImage(src,w,h){
+  /* src: video / ImageBitmap; önce BarcodeDetector, yoksa jsQR */
+  return (async()=>{
+    if("BarcodeDetector" in window){
+      try{const r=await new BarcodeDetector({formats:["qr_code"]}).detect(src);if(r.length)return r[0].rawValue}catch{}
+    }
+    if(window.jsQR){
+      const s=Math.min(1,1000/Math.max(w,h)),cw=Math.round(w*s),ch=Math.round(h*s);
+      const cv=document.createElement("canvas");cv.width=cw;cv.height=ch;
+      const cx=cv.getContext("2d",{willReadFrequently:true});cx.drawImage(src,0,0,cw,ch);
+      const r=jsQR(cx.getImageData(0,0,cw,ch).data,cw,ch);if(r)return r.data;
+    }
+    return"";
+  })();
+}
+async function startScan(){
+  const d=$("sc"),v=$("sv"),m=$("sm");
+  m.textContent="Kamera açılıyor…";if(!d.open)d.showModal();
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){m.textContent="Kamera kullanılamıyor (HTTPS gerekir). \"Fotoğraftan oku\"yu dene.";return}
+  try{scStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false})}
+  catch{m.textContent="Kamera izni verilmedi. \"Fotoğraftan oku\"yu dene.";return}
+  if(!d.open){stopScan();return}
+  v.srcObject=scStream;try{await v.play()}catch{}
+  m.textContent="QR kodu çerçeveye getir";
+  let wrong=false;
+  const tick=async()=>{
+    if(!scStream)return;
+    if(v.videoWidth){
+      const txt=await decodeImage(v,v.videoWidth,v.videoHeight);
+      if(!scStream)return;
+      if(txt){if(await useQr(txt))return;if(!wrong){wrong=true;m.textContent="Bu QR bir Dosya Kasası QR'ı değil"}}
+    }
+    scTimer=setTimeout(tick,200);
+  };
+  tick();
+}
+$("scan").onclick=startScan;
+$("scx").onclick=()=>$("sc").close();
+$("sc").onclose=stopScan;
+$("sc").onclick=e=>{if(e.target===$("sc"))$("sc").close()};
+$("sf").onclick=()=>$("sfi").click();
+$("sfi").onchange=async e=>{
+  const f=e.target.files[0];e.target.value="";if(!f)return;
+  const m=$("sm");m.textContent="Fotoğraf okunuyor…";
+  try{
+    const bmp=await createImageBitmap(f),txt=await decodeImage(bmp,bmp.width,bmp.height);
+    if(bmp.close)bmp.close();
+    if(txt&&await useQr(txt))return;
+    m.textContent=txt?"Bu QR bir Dosya Kasası QR'ı değil":"Fotoğrafta QR bulunamadı";
+  }catch{m.textContent="Fotoğraf okunamadı"}
+};
+
 $("cancel").onclick=mainView;
 $("out").onclick=async()=>{
   if(!await ask("Bağlantıyı kes","Token bu tarayıcıdan silinir. Dosyaların GitHub'daki depoda kalır.","Bağlantıyı kes"))return;
