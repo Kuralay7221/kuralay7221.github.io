@@ -9,9 +9,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Kasa">
 <title>Dosya Kasası</title>
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" id="mf">
+<link rel="icon" id="fav">
+<link rel="apple-touch-icon" id="ati">
 <style>
 :root{--bg:#f4f6f7;--cd:#fff;--bd:#e1e6e9;--tx:#14181b;--mu:#667381;--ac:#0e7a62;--ah:#0a6350;--ax:#fff;--as:#e3f3ed;--dn:#c0372b;--ds:#fdebe8;--sh:0 2px 14px rgba(16,24,40,.09);--sa:env(safe-area-inset-bottom,0px);color-scheme:light}
 [data-theme=dark]{color-scheme:dark;--bg:#0c1011;--cd:#141a1c;--bd:#242c30;--tx:#e8ecee;--mu:#8995a0;--ac:#3ccaa4;--ah:#62dbbb;--ax:#05140f;--as:#10302a;--dn:#ff7d70;--ds:#3a1f1c;--sh:0 2px 14px rgba(0,0,0,.4)}
@@ -21,7 +21,8 @@ html{-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;min-height:100dvh;overflow-x:hidden}
 .top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--bd);padding-top:env(safe-area-inset-top,0px)}
 .in{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
-.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:16px;white-space:nowrap}.logo img{border-radius:8px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:16px;white-space:nowrap}.lg{display:inline-block;flex:none}.lg svg{width:100%;height:100%;display:block}
+.emp{display:grid;justify-items:center;gap:6px;padding:40px 16px}.emp svg{width:150px;height:auto;margin-bottom:8px}.emp b{font-size:17px}.emp span{color:var(--mu);max-width:34ch}.emp button{margin-top:10px}
 #q{flex:1;min-width:0;max-width:340px;margin-left:auto}
 .wrap{max-width:960px;margin:0 auto;padding:18px 16px calc(150px + var(--sa))}
 h1{font-size:25px;letter-spacing:-.02em;margin-bottom:6px}h3{font-size:16px}
@@ -87,7 +88,7 @@ code{background:var(--as);color:var(--ac);padding:1px 6px;border-radius:5px;font
 @keyframes rot{to{transform:rotate(360deg)}}
 dialog{margin:auto;border:1px solid var(--bd);border-radius:18px;background:var(--cd);color:var(--tx);padding:20px;width:min(400px,94vw);max-height:92dvh;box-shadow:0 20px 60px rgba(0,0,0,.4)}
 dialog::backdrop{background:rgba(5,8,10,.55)}dialog h3{margin-bottom:10px}
-dialog.sheet{display:grid;gap:8px}dialog.sheet button{justify-content:flex-start;width:100%}
+dialog.sheet[open]{display:grid;gap:8px}dialog.sheet button{justify-content:flex-start;width:100%}
 @media(max-width:600px){dialog.sheet{margin:auto auto 0;width:100%;max-width:none;border-radius:20px 20px 0 0;padding-bottom:calc(20px + var(--sa))}}
 #pv{width:min(960px,96vw);height:min(88dvh,820px);padding:0;overflow:hidden}#pv[open]{display:flex;flex-direction:column}
 .ph{display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--bd)}.ph b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ph small{color:var(--mu)}
@@ -131,7 +132,7 @@ dialog.sheet{display:grid;gap:8px}dialog.sheet button{justify-content:flex-start
 <body>
 <div class="lock" id="lock" hidden>
   <form class="lk" id="lf">
-    <img src="icons/icon.svg" width="72" height="72" alt="">
+    <span class="lg" style="width:72px;height:72px"></span>
     <h1>Dosya Kasası</h1>
     <input id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="8" placeholder="PIN" aria-label="PIN">
     <div class="err" id="lerr" hidden></div>
@@ -141,7 +142,7 @@ dialog.sheet{display:grid;gap:8px}dialog.sheet button{justify-content:flex-start
 </div>
 
 <header class="top"><div class="in">
-  <div class="logo"><img src="icons/icon.svg" width="30" height="30" alt=""><span>Dosya Kasası</span></div>
+  <div class="logo"><span class="lg" style="width:30px;height:30px"></span><span>Dosya Kasası</span></div>
   <input id="q" type="search" placeholder="Dosyalarda ara" aria-label="Ara" autocomplete="off" hidden>
 </div></header>
 
@@ -245,6 +246,32 @@ const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,
 const rd=(st,k)=>{try{return JSON.parse(st.getItem(k)||"null")}catch{return null}};
 let cfg=null,info=null,items=[],sel=new Set(),pend=new Set(),queue=[],filter="all",mode=ls.get("dk-mode")||"grid",favs=new Set(rd(localStorage,"dk-fav")||[]),running=false,op=false,seq=0,curPin=null,persist=true,view_="setup";
 const thumbs=new Map();
+
+
+/* kodla üretilen logo, ikonlar ve manifest (ayrı dosya gerekmez) */
+const LOGO='<svg viewBox="0 0 512 512" aria-hidden="true"><defs><linearGradient id="lgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#17a883"/><stop offset="1" stop-color="#0a5a47"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#lgg)"/><path d="M168 124h120l56 56v208H168z" fill="#fff" stroke="#fff" stroke-width="24" stroke-linejoin="round"/><path d="M288 124l56 56h-56z" fill="#bfe9dc"/><circle cx="256" cy="262" r="30" fill="#0e7a62"/><path d="M244 270h24l8 58h-40z" fill="#0e7a62"/></svg>';
+const EMPTY='<svg viewBox="0 0 160 120" aria-hidden="true"><rect x="14" y="30" width="132" height="78" rx="14" fill="var(--as)" stroke="var(--ac)" stroke-width="2" stroke-dasharray="6 6"/><path d="M14 44a14 14 0 0114-14h30l10 12h64a14 14 0 0114 14" fill="none" stroke="var(--ac)" stroke-width="2"/><circle cx="80" cy="76" r="20" fill="var(--ac)"/><path d="M80 66v20M70 76h20" stroke="var(--ax)" stroke-width="3" stroke-linecap="round"/></svg>';
+$$(".lg").forEach(e=>e.innerHTML=LOGO);
+function mkIcon(sz,mask){
+  const c=document.createElement("canvas");c.width=c.height=sz;const x=c.getContext("2d"),k=sz/512,g=x.createLinearGradient(0,0,sz,sz);
+  g.addColorStop(0,"#17a883");g.addColorStop(1,"#0a5a47");x.fillStyle=g;
+  if(mask||!x.roundRect)x.fillRect(0,0,sz,sz);else{x.beginPath();x.roundRect(0,0,sz,sz,112*k);x.fill()}
+  x.scale(k,k);x.fillStyle=x.strokeStyle="#fff";x.lineWidth=24;x.lineJoin="round";x.beginPath();
+  [[168,124],[288,124],[344,180],[344,388],[168,388]].forEach(([a,b],i)=>i?x.lineTo(a,b):x.moveTo(a,b));x.closePath();x.fill();x.stroke();
+  x.fillStyle="#bfe9dc";x.beginPath();x.moveTo(288,124);x.lineTo(344,180);x.lineTo(288,180);x.fill();
+  x.fillStyle="#0e7a62";x.beginPath();x.arc(256,262,30,0,7);x.fill();x.beginPath();x.moveTo(244,270);x.lineTo(268,270);x.lineTo(276,328);x.lineTo(236,328);x.fill();
+  return c.toDataURL("image/png")}
+(function(){
+  try{
+    const u=new URL("./",location.href).href;
+    $("#fav").href=mkIcon(64);$("#ati").href=mkIcon(180,1);
+    const man={id:u,name:"Dosya Kasası",short_name:"Kasa",description:"GitHub tabanlı özel dosya kasası",lang:"tr",start_url:u,scope:u,display:"standalone",background_color:"#f4f6f7",theme_color:"#0e7a62",
+      icons:[{src:mkIcon(192),sizes:"192x192",type:"image/png",purpose:"any"},{src:mkIcon(512),sizes:"512x512",type:"image/png",purpose:"any"},{src:mkIcon(512,1),sizes:"512x512",type:"image/png",purpose:"maskable"}],
+      shortcuts:[{name:"Dosya yükle",url:u+"?a=upload"},{name:"Fotoğraf çek",url:u+"?a=camera"}],
+      share_target:{action:u+"?share=1",method:"POST",enctype:"multipart/form-data",params:{files:[{name:"files",accept:["*/*"]}]}}};
+    $("#mf").href=URL.createObjectURL(new Blob([JSON.stringify(man)],{type:"application/manifest+json"}));
+  }catch{}
+})();
 
 /* tema */
 const root=document.documentElement;
@@ -425,7 +452,7 @@ function render(){
     const n=shown(i.name),e=ext(n),on=sel.has(i.name),a=E(i.name),t=tsOf(i.name),c=cat(n),u=thumbs.get(i.name);
     const th=c==="img"&&i.size<4e6?(u?`<img src="${u}" alt="" loading="lazy">`:"") :"";
     return `<article class="it${on?" on":""}" data-n="${a}"><label class="ck"><input type="checkbox" data-c ${on?"checked":""} aria-label="Seç"></label><div class="th ${c}" ${c==="img"&&i.size<4e6&&!u?`data-t="${a}"`:""}>${th||E(e.slice(0,4)||"dos")}</div><div class="inf"><b title="${E(n)}">${E(n)}</b><small>${fmt(i.size)}${t?" · "+new Date(t).toLocaleDateString("tr-TR"):""}</small></div><div class="ac"><button data-a="fav" class="${favs.has(i.name)?"on":""}" aria-label="Yıldızla">${ic("st",favs.has(i.name))}</button><button data-a="more" aria-label="İşlemler">${ic("more")}</button></div></article>`}).join("")
-    :`<div class="empty"><b>${items.length?"Eşleşen dosya yok":"Kasan boş"}</b>${items.length?"Aramayı ya da filtreyi değiştir.":"Sağ alttaki + ile ilk dosyanı yükle."}</div>`;
+    :(items.length?`<div class="empty"><b>Eşleşen dosya yok</b>Aramayı ya da filtreyi değiştir.</div>`:`<div class="emp empty">${EMPTY}<b>Kasan boş</b><span>İlk dosyanı yükle. Fotoğraf, belge ya da herhangi bir dosya olabilir.</span><button class="pri" data-up>Dosya yükle</button></div>`);
   if(io)$$("[data-t]").forEach(el=>io.observe(el));
   $("#sb").hidden=!sel.size||view_!=="files";$("#sn").textContent=sel.size+" seçili";
 }
@@ -434,6 +461,7 @@ $("#q").oninput=render;$("#sort").onchange=e=>{ls.set("dk-sort",e.target.value);
 $("#vm").onclick=()=>{mode=mode==="grid"?"list":"grid";ls.set("dk-mode",mode);render()};
 $("#list").onchange=e=>{const c=e.target;if(!c.matches("[data-c]"))return;const n=c.closest(".it").dataset.n;c.checked?sel.add(n):sel.delete(n);render()};
 $("#list").onclick=e=>{
+  if(e.target.closest("[data-up]"))return $("#up").showModal();
   const it=e.target.closest(".it");if(!it||e.target.closest(".ck"))return;const n=it.dataset.n,b=e.target.closest("[data-a]");
   if(b&&b.dataset.a==="fav"){favs.has(n)?favs.delete(n):favs.add(n);try{localStorage.setItem("dk-fav",JSON.stringify([...favs]))}catch{}render()}
   else if(b)sheet(n);
