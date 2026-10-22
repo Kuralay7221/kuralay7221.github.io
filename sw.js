@@ -1,5 +1,5 @@
-const V = "dk-v5";
-const SHELL = ["./", "index.html"];
+const V = "dk-v7";
+const SHELL = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/icon.svg"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -31,6 +31,12 @@ self.addEventListener("fetch", e => {
       }
       return Response.redirect(new URL("./?shared=1", self.registration.scope).href, 303);
     })());
+    return;
+  }
+
+  // CDN kütüphaneleri (QR, ZIP): bir kez yüklenince çevrimdışı da çalışsın
+  if (r.method === "GET" && u.hostname === "cdnjs.cloudflare.com") {
+    e.respondWith(caches.open(V).then(async c => { const h = await c.match(r); if (h) return h; const res = await fetch(r); if (res.ok) c.put(r, res.clone()); return res; }));
     return;
   }
 
