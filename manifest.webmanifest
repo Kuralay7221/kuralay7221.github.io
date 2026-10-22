@@ -1,0 +1,30 @@
+{
+  "id": "./",
+  "name": "Dosya Kasası",
+  "short_name": "Kasa",
+  "description": "GitHub tabanlı özel dosya kasası",
+  "lang": "tr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0c1011",
+  "theme_color": "#0e7a62",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {"src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "Dosya yükle", "url": "./?a=upload", "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]},
+    {"name": "Fotoğraf çek", "url": "./?a=camera", "icons": [{"src": "icons/icon-192.png", "sizes": "192x192"}]}
+  ],
+  "share_target": {
+    "action": "./?share=1",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {"files": [{"name": "files", "accept": ["*/*"]}]}
+  }
+}
