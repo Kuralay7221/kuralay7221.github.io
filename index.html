@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Kasa">
 <title>Dosya Kasası</title>
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="manifest" id="mf" href="manifest.webmanifest">
 <link rel="icon" id="fav">
 <link rel="apple-touch-icon" id="ati">
 <style>
@@ -44,7 +44,7 @@ input[type=checkbox]{width:19px;height:19px;accent-color:var(--ac)}
 .card h3{margin-bottom:8px}.card p,.muted{color:var(--mu);font-size:13.5px;margin-bottom:10px}
 .card ol{padding-left:20px;color:var(--mu);font-size:14px;display:grid;gap:7px;margin-top:10px}.card ol b{color:var(--tx)}summary{cursor:pointer;font-weight:650}
 a{color:var(--ac)}code{background:var(--as);color:var(--ac);padding:1px 7px;border-radius:6px;font-size:13px}
-.err{background:var(--ds);color:var(--dn);border-radius:12px;padding:10px 13px;font-size:13px;margin-bottom:12px}
+.err{background:var(--ds);color:var(--dn);border-radius:12px;padding:10px 13px;font-size:13px;margin-bottom:12px;word-break:break-word}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.sp{flex:1}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
 .chips button{border-radius:99px;min-height:36px;padding:4px 16px;white-space:nowrap;font-size:14px;font-weight:550}
@@ -81,15 +81,15 @@ a{color:var(--ac)}code{background:var(--as);color:var(--ac);padding:1px 7px;bord
 .nav .fab{background:linear-gradient(135deg,var(--ac),var(--ah));color:var(--ax);width:56px;height:56px;border-radius:50%;padding:0;margin:0 6px;justify-content:center;box-shadow:0 8px 20px rgba(14,122,98,.4)}
 .sb{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + var(--sa));z-index:9;display:flex;gap:6px;align-items:center;background:var(--tx);color:var(--bg);border-radius:16px;padding:8px 8px 8px 16px;width:max-content;max-width:calc(100vw - 20px);box-shadow:var(--sh);animation:fi .2s ease}
 .sb button{min-height:36px;padding:4px 12px;border-radius:10px}
-.toasts{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:12px;right:12px;display:grid;justify-items:center;gap:8px;z-index:60;pointer-events:none}
+.toasts{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:12px;right:12px;display:grid;justify-items:center;gap:8px;z-index:200;pointer-events:none}
 .toast{pointer-events:auto;background:var(--tx);color:var(--bg);padding:9px 9px 9px 16px;border-radius:14px;font-size:14px;box-shadow:var(--sh);display:flex;gap:10px;align-items:center;max-width:460px;word-break:break-word;animation:fi .25s ease}
 .toast.bad{background:var(--dn);color:#fff}.toast button{min-height:32px;padding:2px 12px;background:rgba(255,255,255,.18);color:inherit;border:0}
-.busy{position:fixed;inset:0;z-index:50;display:grid;place-items:center;pointer-events:none}.busy.blk{pointer-events:auto;background:rgba(5,8,10,.4);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.busy{position:fixed;inset:0;z-index:150;display:grid;place-items:center;pointer-events:none}.busy.blk{pointer-events:auto;background:rgba(5,8,10,.4);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 .bx{display:flex;gap:12px;align-items:center;background:var(--cd);border:1px solid var(--bd);border-radius:16px;padding:14px 20px;box-shadow:var(--sh);max-width:90vw}
 .bx small{display:block;color:var(--mu);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .spin{flex:none;width:22px;height:22px;border-radius:50%;border:3px solid var(--as);border-top-color:var(--ac);animation:rot .7s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
-dialog{margin:auto;border:1px solid var(--bd);border-radius:22px;background:var(--cd);color:var(--tx);padding:22px;width:min(420px,94vw);max-height:92dvh;box-shadow:0 24px 70px rgba(0,0,0,.4);animation:fi .22s ease}
+dialog{margin:auto;border:1px solid var(--bd);border-radius:22px;background:var(--cd);color:var(--tx);padding:22px;width:min(420px,94vw);max-height:92dvh;overflow:auto;box-shadow:0 24px 70px rgba(0,0,0,.4);animation:fi .22s ease}
 dialog::backdrop{background:rgba(5,8,10,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}dialog h3{margin-bottom:10px;font-size:18px}
 dialog.sheet[open]{display:grid;gap:8px}dialog.sheet button{justify-content:flex-start;width:100%}
 @media(max-width:600px){dialog.sheet{margin:auto auto 0;width:100%;max-width:none;border-radius:24px 24px 0 0;padding-bottom:calc(22px + var(--sa))}}
@@ -98,8 +98,8 @@ dialog.sheet[open]{display:grid;gap:8px}dialog.sheet button{justify-content:flex
 .pb{flex:1;min-height:0;display:grid;place-items:center;padding:10px;overflow:auto;background:var(--bg)}
 .pb img,.pb video{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px}.pb iframe{width:100%;height:100%;border:0}.pb pre{width:100%;white-space:pre-wrap;word-break:break-word;font-size:13px;align-self:start}
 .vbox{aspect-ratio:1;background:#000;border-radius:16px;overflow:hidden;position:relative;margin-bottom:10px}.vbox video{width:100%;height:100%;object-fit:cover}
-.vbox:after{content:"";position:absolute;inset:18%;border:3px solid rgba(255,255,255,.85);border-radius:16px}
-.qbox{background:#fff;border-radius:16px;padding:6px;width:min(280px,100%);aspect-ratio:1;margin:0 auto 8px;display:grid;place-items:center;color:#555;text-align:center;font-size:13px}.qbox svg{width:100%;height:100%}
+.vbox:after{content:"";position:absolute;inset:12%;border:3px solid rgba(255,255,255,.85);border-radius:16px}
+.qbox{background:#fff;border-radius:16px;padding:6px;width:min(340px,100%);aspect-ratio:1;margin:0 auto 8px;display:grid;place-items:center;color:#555;text-align:center;font-size:13px}.qbox svg{width:100%;height:100%}
 .lock{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;padding:20px}
 .lk{display:grid;gap:12px;justify-items:center;text-align:center;width:min(300px,100%)}.lk input{text-align:center;font-size:22px;letter-spacing:.4em}.lk button{width:100%}
 .lnk{border:0;background:none;color:var(--mu);font-size:13px;font-weight:450;min-height:32px}
@@ -110,7 +110,7 @@ dialog.sheet[open]{display:grid;gap:8px}dialog.sheet button{justify-content:flex
 .ft{display:none}
 @media(min-width:900px){
 .in,.wrap{max-width:1280px}.in{padding:14px 28px;min-height:72px}#q{max-width:440px}
-.wrap{padding:26px 28px 60px 300px}.dz{display:flex}
+.wrap{padding:26px 28px 60px 300px}.wrap.nonav{padding-left:28px;max-width:760px}.dz{display:flex}
 .nav{left:max(28px,calc((100vw - 1280px)/2 + 28px));top:92px;bottom:auto;transform:none;flex-direction:column;align-items:stretch;width:236px;padding:16px;border-radius:24px;gap:6px}
 .nav button{flex-direction:row;justify-content:flex-start;gap:14px;padding:10px 18px;font-size:14.5px;border-radius:14px;min-height:48px}
 .nav .fab{order:-1;width:auto;height:52px;border-radius:14px;margin:0 0 10px;padding:0 18px;justify-content:flex-start;box-shadow:0 8px 20px rgba(14,122,98,.3)}
@@ -158,11 +158,15 @@ body{overscroll-behavior-y:contain}
   <div class="sq" id="sq" hidden><input id="q" type="search" placeholder="Dosyalarda ara" aria-label="Ara" autocomplete="off"><button class="qclr" id="qclr" type="button" aria-label="Aramayı temizle" hidden>✕</button></div>
 </div></header>
 
-<main class="wrap">
+<main class="wrap" id="wrap">
 <section id="v-setup" hidden>
   <h1>Özel dosya kasanı kur</h1>
   <p class="lead">Dosyaların kendi özel GitHub deponda durur. Sunucu ya da ek yazılım gerekmez.</p>
   <button class="pri big" type="button" id="scan">QR ile bağlan</button>
+  <p class="muted" id="iosq" hidden>iPhone/iPad: Ana Ekran uygulamasının depolaması Safari'den ayrıdır. Uygulamayı kuracaksan QR'ı Safari'de değil, uygulamanın içindeki bu düğmeyle okut.</p>
+  <div class="card"><h3>Bağlantıyı yapıştır</h3><p>QR çalışmazsa, diğer cihazdaki "Bağlantıyı kopyala" ile aldığın bağlantıyı buraya yapıştır.</p>
+    <div class="err" id="perr2" hidden></div>
+    <div class="row"><input type="text" id="plink" placeholder="https://…#r=…" autocapitalize="none" autocorrect="off" spellcheck="false" style="flex:1;min-width:0"><button id="plgo" type="button">Bağlan</button></div></div>
   <form class="card" id="form" autocomplete="off">
     <h3>Bağlantı</h3>
     <div class="err" id="err" hidden role="alert"></div>
@@ -206,7 +210,7 @@ body{overscroll-behavior-y:contain}
   <div class="card"><h3>Görünüm</h3>
     <div class="set"><span>Tema</span><select id="theme" aria-label="Tema"><option value="light">Açık</option><option value="dark">Koyu</option><option value="auto">Sistem</option></select></div>
   </div>
-  <div class="card"><h3>Uygulama olarak yükle</h3><p id="iosh" hidden>iPhone/iPad: Safari'de <b>Paylaş</b> simgesine dokun, sonra <b>Ana Ekrana Ekle</b>'yi seç.</p><p id="insd" hidden>Uygulama bu cihaza yüklü.</p><button class="pri" id="inst" hidden>Uygulamayı yükle</button><p id="noinst">Tarayıcı menüsündeki "Uygulamayı yükle" ya da "Ana ekrana ekle" seçeneğini kullanabilirsin.</p></div>
+  <div class="card"><h3>Uygulama olarak yükle</h3><p id="iosh" hidden>iPhone/iPad: Safari'de <b>Paylaş</b> simgesine dokun, sonra <b>Ana Ekrana Ekle</b>'yi seç. Eklediğin uygulama ayrı depolama kullanır, bağlantıyı uygulamanın içinde QR ile yeniden kur.</p><p id="insd" hidden>Uygulama bu cihaza yüklü.</p><button class="pri" id="inst" hidden>Uygulamayı yükle</button><p id="noinst">Tarayıcı menüsündeki "Uygulamayı yükle" ya da "Ana ekrana ekle" seçeneğini kullanabilirsin.</p></div>
 </section>
 </main>
 
@@ -227,9 +231,9 @@ body{overscroll-behavior-y:contain}
   <label>Tekrar<input type="password" id="pn2" inputmode="numeric" maxlength="8" autocomplete="off"></label>
   <div class="err" id="perr" hidden></div><div class="row"><button class="pri" id="pok">Kaydet</button><button id="pcx">Vazgeç</button></div></dialog>
 <dialog id="pv"><div class="ph"><button class="ib" id="pvp" aria-label="Önceki">‹</button><button class="ib" id="pvn2" aria-label="Sonraki">›</button><b id="pvt"></b><small id="pvn"></small><button id="pvd">İndir</button><button id="pvx">Kapat</button></div><div class="pb" id="pvb"></div></dialog>
-<dialog id="sc"><h3>QR kodu okut</h3><div class="vbox"><video id="sv" playsinline muted></video></div><p class="muted" id="sm"></p><div class="row"><button id="sf">Fotoğraftan oku</button><button id="scx">Kapat</button></div></dialog>
+<dialog id="sc"><h3>QR kodu okut</h3><div class="vbox"><video id="sv" playsinline muted autoplay></video></div><p class="muted" id="sm"></p><div class="row"><button id="sf">Fotoğraftan oku</button><button id="scx">Kapat</button></div></dialog>
 <input type="file" id="sfi" accept="image/*" hidden>
-<dialog id="qd"><h3>Telefonu QR ile bağla</h3><p class="muted">Telefonda kurulum ekranındaki <b>QR ile bağlan</b> ile ya da kamerayla okut. QR token'ını içerir, sadece kendi telefonunla okut. 2 dakikada kapanır.</p>
+<dialog id="qd"><h3>Telefonu QR ile bağla</h3><p class="muted">Telefonda kurulum ekranındaki <b>QR ile bağlan</b> ile okut. QR token'ını içerir, sadece kendi telefonunla okut. 2 dakikada kapanır.</p>
   <label>Mod<select id="qm" style="width:100%"><option value="p">Kalıcı: telefon hatırlar</option><option value="s">Tek seferlik: tarayıcı kapanınca silinir</option></select></label>
   <div class="qbox" id="qb"></div><p class="muted" id="qt" style="text-align:center"></p><div class="row"><button id="qc">Bağlantıyı kopyala</button><button id="qx">Kapat</button></div></dialog>
 <input type="file" id="fi" multiple hidden><input type="file" id="fc" accept="image/*" capture="environment" hidden>
@@ -259,11 +263,11 @@ const mime=n=>MIME[ext(n)]||"application/octet-stream";
 const canShare=typeof navigator.canShare==="function"&&typeof navigator.share==="function";
 const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}}};
 const rd=(st,k)=>{try{return JSON.parse(st.getItem(k)||"null")}catch{return null}};
+const saveFavs=()=>ls.set("dk-fav",JSON.stringify([...favs]));
 let cfg=null,info=null,items=[],sel=new Set(),pend=new Set(),queue=[],filter="all",mode=ls.get("dk-mode")||"grid",favs=new Set(rd(localStorage,"dk-fav")||[]),running=false,op=false,seq=0,curPin=null,persist=true,view_="setup";
 const thumbs=new Map();
 
-
-/* kodla üretilen logo, ikonlar ve manifest (ayrı dosya gerekmez) */
+/* kodla üretilen logo, ikonlar ve manifest */
 const LOGO='<svg viewBox="0 0 512 512" aria-hidden="true"><defs><linearGradient id="lgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#17a883"/><stop offset="1" stop-color="#0a5a47"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#lgg)"/><path d="M168 124h120l56 56v208H168z" fill="#fff" stroke="#fff" stroke-width="24" stroke-linejoin="round"/><path d="M288 124l56 56h-56z" fill="#bfe9dc"/><circle cx="256" cy="262" r="30" fill="#0e7a62"/><path d="M244 270h24l8 58h-40z" fill="#0e7a62"/></svg>';
 const EMPTY='<svg viewBox="0 0 160 120" aria-hidden="true"><rect x="14" y="30" width="132" height="78" rx="14" fill="var(--as)" stroke="var(--ac)" stroke-width="2" stroke-dasharray="6 6"/><path d="M14 44a14 14 0 0114-14h30l10 12h64a14 14 0 0114 14" fill="none" stroke="var(--ac)" stroke-width="2"/><circle cx="80" cy="76" r="20" fill="var(--ac)"/><path d="M80 66v20M70 76h20" stroke="var(--ax)" stroke-width="3" stroke-linecap="round"/></svg>';
 $$(".lg").forEach((e,i)=>e.innerHTML=LOGO.replaceAll("lgg","lgg"+i));
@@ -280,11 +284,13 @@ function mkIcon(sz,mask){
   try{
     const u=new URL("./",location.href).href;
     $("#fav").href=mkIcon(64);$("#ati").href=mkIcon(180,1);
-    const man={id:u,name:"Dosya Kasası",short_name:"Kasa",description:"GitHub tabanlı özel dosya kasası",lang:"tr",start_url:u,scope:u,display:"standalone",background_color:"#f4f6f7",theme_color:"#0e7a62",
-      icons:[{src:mkIcon(192),sizes:"192x192",type:"image/png",purpose:"any"},{src:mkIcon(512),sizes:"512x512",type:"image/png",purpose:"any"},{src:mkIcon(512,1),sizes:"512x512",type:"image/png",purpose:"maskable"}],
-      shortcuts:[{name:"Dosya yükle",url:u+"?a=upload"},{name:"Fotoğraf çek",url:u+"?a=camera"}],
-      share_target:{action:u+"?share=1",method:"POST",enctype:"multipart/form-data",params:{files:[{name:"files",accept:["*/*"]}]}}};
-    
+    if(/^https?:$/.test(location.protocol)){
+      const man={id:u,name:"Dosya Kasası",short_name:"Kasa",description:"GitHub tabanlı özel dosya kasası",lang:"tr",start_url:u,scope:u,display:"standalone",background_color:"#f4f6f7",theme_color:"#0e7a62",
+        icons:[{src:mkIcon(192),sizes:"192x192",type:"image/png",purpose:"any"},{src:mkIcon(512),sizes:"512x512",type:"image/png",purpose:"any"},{src:mkIcon(512,1),sizes:"512x512",type:"image/png",purpose:"maskable"}],
+        shortcuts:[{name:"Dosya yükle",url:u+"?a=upload"},{name:"Fotoğraf çek",url:u+"?a=camera"}],
+        share_target:{action:u+"?share=1",method:"POST",enctype:"multipart/form-data",params:{files:[{name:"files",accept:["*/*"]}]}}};
+      $("#mf").href="data:application/manifest+json;charset=utf-8,"+encodeURIComponent(JSON.stringify(man));
+    }
   }catch{}
 })();
 
@@ -307,7 +313,7 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
 $$("[data-ic]").forEach(e=>e.innerHTML=ic(e.dataset.ic));
 
 /* PIN şifreleme */
-const te=new TextEncoder(),b2s=b=>btoa(String.fromCharCode(...new Uint8Array(b))),s2b=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const te=new TextEncoder(),b2s=b=>{let s="";const u=new Uint8Array(b);for(let i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);return btoa(s)},s2b=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 async function key(pin,salt){const k=await crypto.subtle.importKey("raw",te.encode(pin),"PBKDF2",false,["deriveKey"]);return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:250000,hash:"SHA-256"},k,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
 async function seal(pin,txt){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));return{s:b2s(salt),i:b2s(iv),c:b2s(await crypto.subtle.encrypt({name:"AES-GCM",iv},await key(pin,salt),te.encode(txt)))}}
 async function unseal(pin,o){return new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:s2b(o.i)},await key(pin,s2b(o.s)),s2b(o.c)))}
@@ -363,7 +369,7 @@ async function shareFile(n){
 /* görünümler */
 function show(v){
   view_=v;["setup","files","set"].forEach(x=>$("#v-"+x).hidden=x!==v);
-  $("#nav").hidden=!cfg;$$(".nav [data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  $("#nav").hidden=!cfg;$("#wrap").classList.toggle("nonav",!cfg);$$(".nav [data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
   $("#sq").hidden=v!=="files";if(v!=="files")$("#sb").hidden=true;else render();
   if(v==="set"){$("#sinfo").textContent=`${cfg.repo} · ${cfg.folder} · özel depo${info?" · depo boyutu "+fmt(info.size*1024):""}`;pinUI();storUI()}
   if(v==="setup"){$("#cancel").hidden=!cfg;if(cfg){$("#repo").value=cfg.repo;$("#folder").value=cfg.folder;$("#tok").value="";$("#tok").placeholder="Boş bırakırsan mevcut token kullanılır";$("#rem").checked=persist}}
@@ -378,15 +384,14 @@ async function connect(c){
     const r=await gh("GET","/repos/"+c.repo);
     if(r.status===404)throw new Error("Depo bulunamadı ya da token bu depoya erişemiyor. Depo adını ve token'daki \"Only select repositories\" seçimini kontrol et.");
     if(!r.ok)throw new Error(await ghErr(r));
-    info=await r.json();
-    if(!info.private)throw new Error("Bu depo herkese açık (public). Settings → Danger Zone → Change visibility ile Private yap.");
-    if(info.permissions&&info.permissions.push===false)throw new Error("Token'ın yazma izni yok. Contents: Read and write ver.");
-    items=await listFiles();return true;
+    const inf=await r.json();
+    if(!inf.private)throw new Error("Bu depo herkese açık (public). Settings → Danger Zone → Change visibility ile Private yap.");
+    if(inf.permissions&&inf.permissions.push===false)throw new Error("Token'ın yazma izni yok. Contents: Read and write ver.");
+    const its=await listFiles();info=inf;items=its;return true;
   }catch(e){cfg=prev;$("#err").textContent=e.message;$("#err").hidden=false;return false}
 }
 $("#form").onsubmit=async e=>{
   e.preventDefault();$("#err").hidden=true;
-  const raw=rd(sessionStorage,LS)||rd(localStorage,LS)||{};
   const c={repo:parseRepo($("#repo").value),token:$("#tok").value.trim()||(cfg&&cfg.token)||"",folder:cleanFolder($("#folder").value)};
   if(!c.repo||!c.token){$("#err").textContent="Depo (kullanici/depo) ve token gerekli.";$("#err").hidden=false;return}
   $("#go").disabled=true;$("#go").textContent="Bağlanıyor…";
@@ -395,8 +400,8 @@ $("#form").onsubmit=async e=>{
 };
 $("#cancel").onclick=()=>show("files");
 $("#sedit").onclick=()=>show("setup");
-$("#sout").onclick=()=>{if(!confirm("Bağlantı bu cihazdan silinsin mi? Dosyaların GitHub'da kalır."))return;
-  try{localStorage.removeItem(LS);sessionStorage.removeItem(LS)}catch{}location.reload()};
+const wipe=()=>{try{localStorage.removeItem(LS);sessionStorage.removeItem(LS);localStorage.removeItem("dk-list")}catch{}location.reload()};
+$("#sout").onclick=()=>{if(confirm("Bağlantı bu cihazdan silinsin mi? Dosyaların GitHub'da kalır."))wipe()};
 
 /* PIN */
 function pinUI(){$("#pinfo").textContent=curPin?"PIN açık. Uygulama arka plana alınıp 1 dakikadan uzun kalırsa kilitlenir.":"PIN kapalı. PIN belirlersen token şifreli saklanır ve uygulama açılırken PIN istenir.";$("#pset").textContent=curPin?"PIN'i değiştir":"PIN belirle";$("#prm").hidden=!curPin;$("#plock").hidden=!curPin}
@@ -409,7 +414,7 @@ $("#pok").onclick=async()=>{const a=$("#pn1").value,b=$("#pn2").value,er=$("#per
   curPin=a;await saveCfg();$("#pd").close();pinUI();toast("PIN kaydedildi")};
 $("#prm").onclick=async()=>{if(!confirm("PIN kaldırılsın mı? Token şifresiz saklanır."))return;curPin=null;await saveCfg();pinUI();toast("PIN kaldırıldı")};
 $("#plock").onclick=()=>location.reload();
-$("#lrs").onclick=()=>{if(confirm("Kayıtlı bağlantı silinecek. Devam edilsin mi?")){try{localStorage.removeItem(LS);sessionStorage.removeItem(LS)}catch{}location.reload()}};
+$("#lrs").onclick=()=>{if(confirm("Kayıtlı bağlantı silinecek. Devam edilsin mi?"))wipe()};
 
 /* yükleme */
 function addFiles(list){for(const f of list)queue.push(f.size>MAX?{f,st:"100 MB üstü",cls:"bad",p:0,big:1}:{f,st:"Bekliyor",cls:"",p:0});rq();run()}
@@ -440,7 +445,7 @@ $("#fi").onchange=$("#fc").onchange=e=>{addFiles([...e.target.files]);e.target.v
 let dc=0;const isFiles=()=>cfg&&view_==="files";
 const hasF=e=>e.dataTransfer&&[...(e.dataTransfer.types||[])].includes("Files");
 addEventListener("dragenter",e=>{if(!isFiles()||!hasF(e))return;e.preventDefault();dc++;$("#ov").classList.add("on")});
-addEventListener("dragleave",()=>{if(--dc<=0){dc=0;$("#ov").classList.remove("on")}});
+addEventListener("dragleave",e=>{if(!hasF(e))return;if(--dc<=0){dc=0;$("#ov").classList.remove("on")}});
 addEventListener("dragover",e=>{if(hasF(e))e.preventDefault()});
 addEventListener("drop",e=>{if(!hasF(e))return;e.preventDefault();dc=0;$("#ov").classList.remove("on");if(isFiles()&&e.dataTransfer.files.length)addFiles([...e.dataTransfer.files])});
 addEventListener("paste",e=>{if(isFiles()&&e.clipboardData&&e.clipboardData.files.length)addFiles([...e.clipboardData.files])});
@@ -481,22 +486,23 @@ $("#list").onclick=e=>{
   if(lp){lp=false;return}
   if(e.target.closest("[data-up]"))return $("#up").showModal();
   const it=e.target.closest(".it");if(!it||e.target.closest(".ck"))return;const n=it.dataset.n,b=e.target.closest("[data-a]");
-  if(b&&b.dataset.a==="fav"){favs.has(n)?favs.delete(n):favs.add(n);try{localStorage.setItem("dk-fav",JSON.stringify([...favs]))}catch{}render()}
+  if(b&&b.dataset.a==="fav"){favs.has(n)?favs.delete(n):favs.add(n);saveFavs();render()}
   else if(b)sheet(n);
   else if(sel.size){sel.has(n)?sel.delete(n):sel.add(n);render()}
   else if(kind(n))openPv(n);else sheet(n);
 };
 $("#sx").onclick=()=>{sel.clear();render()};
 addEventListener("keydown",e=>{
-  if(e.key==="/"&&isFiles()&&!/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();$("#q").focus()}
-  if(e.key==="Escape"&&sel.size&&!document.querySelector("dialog[open]")){sel.clear();render()}
-  if(isFiles()&&!document.querySelector("dialog[open]")&&!/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)){
+  const typing=/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName),dlg=document.querySelector("dialog[open]");
+  if(e.key==="/"&&isFiles()&&!typing&&!dlg){e.preventDefault();$("#q").focus()}
+  if(e.key==="Escape"&&sel.size&&!dlg){sel.clear();render()}
+  if(isFiles()&&!dlg&&!typing){
     if((e.ctrlKey||e.metaKey)&&e.key==="a"){e.preventDefault();view().forEach(i=>sel.add(i.name));render()}
-    if((e.key==="Delete"||e.key==="Backspace")&&sel.size)remove([...sel])}
+    if(e.key==="Delete"&&sel.size)remove([...sel])}
   if($("#pv").open){if(e.key==="ArrowLeft")showPv(pv.i-1);if(e.key==="ArrowRight")showPv(pv.i+1)}
 });
 
-/* v3: toplu ilerleme, depolama, yenile, ara-temizle, tümünü seç, uzun bas, aşağı çek */
+/* toplu ilerleme, depolama, yenile, ara-temizle, tümünü seç, uzun bas, aşağı çek */
 function tot(){const q=queue.filter(x=>!x.big),b=$("#tot");if(q.length<2){b.hidden=true;return}
   const T=q.reduce((a,x)=>a+x.f.size,0)||1,D=q.reduce((a,x)=>a+x.f.size*(x.cls==="ok"?1:x.p),0),n=q.filter(x=>x.cls==="ok").length,p=Math.round(D/T*100);
   b.hidden=false;$("#tbi").style.width=p+"%";$("#tt").textContent=`${n}/${q.length} dosya · %${p}`}
@@ -522,7 +528,7 @@ addEventListener("touchend",()=>{if(py&&pd>90)doRefresh();py=pd=0;ptr.style.opac
 /* işlem sayfası */
 function sheet(n){
   const k=kind(n),b=$("#shb");$("#sht").textContent=shown(n);
-  const rows=[...(k?[["Önizle",()=>openPv(n)]]:[]),["İndir",()=>guard(async()=>{busyOn("İndiriliyor…",shown(n));dlBlob(await blobOf(n),n)})],...(canShare?[["Paylaş",()=>guard(async()=>{busyOn("Hazırlanıyor…",shown(n));await shareFile(n)})]]:[]),[favs.has(n)?"Yıldızı kaldır":"Yıldızla",()=>{favs.has(n)?favs.delete(n):favs.add(n);try{localStorage.setItem("dk-fav",JSON.stringify([...favs]))}catch{}render()}],["Yeniden adlandır",()=>guard(()=>rename(n))],["Sil",()=>remove([n]),"dn"]];
+  const rows=[...(k?[["Önizle",()=>openPv(n)]]:[]),["İndir",()=>guard(async()=>{busyOn("İndiriliyor…",shown(n));dlBlob(await blobOf(n),n)})],...(canShare?[["Paylaş",()=>guard(async()=>{busyOn("Hazırlanıyor…",shown(n));await shareFile(n)})]]:[]),[favs.has(n)?"Yıldızı kaldır":"Yıldızla",()=>{favs.has(n)?favs.delete(n):favs.add(n);saveFavs();render()}],["Yeniden adlandır",()=>guard(()=>rename(n))],["Sil",()=>remove([n]),"dn"]];
   b.replaceChildren(...rows.map(([t,f,c])=>{const x=document.createElement("button");x.textContent=t;if(c)x.className=c;x.onclick=()=>{$("#sh").close();f()};return x}));
   $("#sh").showModal();
 }
@@ -530,10 +536,11 @@ $("#shx").onclick=()=>$("#sh").close();
 async function rename(n){
   const it=items.find(i=>i.name===n),old=shown(n),nv=(prompt("Yeni ad",old)||"").trim();if(!nv||nv===old||!it)return;
   const nn=(n.match(/^\d{13}_/)||[""])[0]+nv.replace(/[^\p{L}\p{N}._\-]/gu,"_");
+  if(nn===n)return toast("Ad zaten aynı");
   busyOn("Yeniden adlandırılıyor…",old,true);
   await put(nn,await blobOf(n),()=>{});
   const r=await gh("DELETE",fpath(n),{message:"Yeniden adlandır: "+old,sha:it.sha});if(!r.ok)throw new Error(await ghErr(r));
-  if(favs.delete(n)){favs.add(nn);try{localStorage.setItem("dk-fav",JSON.stringify([...favs]))}catch{}}
+  if(favs.delete(n)){favs.add(nn);saveFavs()}
   await refresh();toast("Yeniden adlandırıldı");
 }
 
@@ -547,7 +554,7 @@ let dq=Promise.resolve();
 async function realDel(names){
   let bad=0,first="";
   for(const n of names){const it=items.find(x=>x.name===n);
-    try{if(!it)throw new Error("Dosya bulunamadı");let r;for(let t=0;t<3;t++){r=await gh("DELETE",fpath(n),{message:"Sil: "+shown(n),sha:it.sha});if(r.status!==409)break;await wait(900*(t+1))}if(!r.ok)throw new Error(await ghErr(r));items=items.filter(x=>x!==it);favs.delete(n)}
+    try{if(!it)throw new Error("Dosya bulunamadı");let r;for(let t=0;t<3;t++){r=await gh("DELETE",fpath(n),{message:"Sil: "+shown(n),sha:it.sha});if(r.status!==409)break;await wait(900*(t+1))}if(!r.ok)throw new Error(await ghErr(r));items=items.filter(x=>x!==it);favs.delete(n);saveFavs()}
     catch(e){bad++;first=first||e.message}finally{pend.delete(n)}}
   if(bad)toast(`${bad} dosya silinemedi: ${first}`,"bad");
   await refresh();
@@ -582,10 +589,12 @@ let sx=0;$("#pvb").addEventListener("touchstart",e=>{sx=e.touches.length===1?e.t
 $("#pvb").addEventListener("touchend",e=>{if(!sx||e.target.closest("video,audio,iframe"))return;const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>70)showPv(pv.i+(d<0?1:-1));sx=0},{passive:true});
 document.querySelectorAll("dialog").forEach(d=>d.addEventListener("click",e=>{if(e.target!==d||d.id==="pd")return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close()}));
 
-/* QR ile telefon bağla */
+/* QR ile telefon bağla (kısa bağlantı: varsayılan değerler yazılmaz, hata düzeltme L) */
 let qiv=0,qleft=0;
-const qrLink=()=>{const u=new URL("./",location.href);u.hash=new URLSearchParams({r:cfg.repo,t:cfg.token,f:cfg.folder,m:$("#qm").value}).toString();return u.toString()};
-function qrSvg(text){const q=qrcode(0,"M");q.addData(text);q.make();const n=q.getModuleCount(),m=3;let d="";
+const qrLink=()=>{const u=new URL("./",location.href),p=new URLSearchParams({r:cfg.repo,t:cfg.token});
+  if(cfg.folder!=="dosyalar")p.set("f",cfg.folder);if($("#qm").value==="s")p.set("m","s");
+  u.search="";u.hash=p.toString();return u.toString()};
+function qrSvg(text){const q=qrcode(0,"L");q.addData(text);q.make();const n=q.getModuleCount(),m=4;let d="";
   for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))d+=`M${c+m} ${r+m}h1v1h-1z`;const z=n+2*m;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${z} ${z}" shape-rendering="crispEdges"><rect width="${z}" height="${z}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`}
 function qTick(){if(qleft<=0){clearInterval(qiv);$("#qb").textContent="Süre doldu. QR kaldırıldı.";$("#qt").textContent="";return}$("#qt").textContent=`QR ${Math.floor(qleft/60)}:${String(qleft%60).padStart(2,"0")} sonra kapanır`;qleft--}
@@ -599,36 +608,42 @@ $("#qx").onclick=()=>$("#qd").close();$("#qd").onclose=()=>{clearInterval(qiv);$
 $("#qc").onclick=async()=>{try{await navigator.clipboard.writeText(qrLink());toast("Bağlantı kopyalandı")}catch{prompt("Bağlantıyı kopyala:",qrLink())}};
 
 /* QR okuma */
-let scStream=null,scTimer=0;
+let scStream=null,scTimer=0,scCv=null;
 function parseQr(text){let u;try{u=new URL(String(text).trim())}catch{return null}
-  const p=new URLSearchParams(u.hash.slice(1)),r=p.get("r"),t=p.get("t");if(!r||!t)return null;
-  return{c:{repo:parseRepo(r),token:t,folder:cleanFolder(p.get("f")||"dosyalar")},perm:p.get("m")!=="s"}}
-function stopScan(){clearTimeout(scTimer);if(scStream){scStream.getTracks().forEach(t=>t.stop());scStream=null}$("#sv").srcObject=null}
+  const p=new URLSearchParams(u.hash.slice(1)),r=p.get("r"),t=p.get("t"),repo=r&&parseRepo(r);if(!repo||!t)return null;
+  return{c:{repo,token:t,folder:cleanFolder(p.get("f")||"dosyalar")},perm:p.get("m")!=="s"}}
+function stopScan(){clearTimeout(scTimer);scTimer=0;if(scStream){scStream.getTracks().forEach(t=>t.stop());scStream=null}$("#sv").srcObject=null}
 async function useQr(text){
-  const h=parseQr(text);if(!h)return false;stopScan();if($("#sc").open)$("#sc").close();$("#err").hidden=true;
-  busyOn("Bağlanılıyor…","QR ile giriş",true);const ok=await connect(h.c);busyOff();
+  const h=parseQr(text);if(!h)return false;stopScan();if($("#sc").open)$("#sc").close();$("#err").hidden=true;$("#perr2").hidden=true;
+  busyOn("Bağlanılıyor…","QR ile giriş",true);let ok=false;
+  try{ok=await connect(h.c)}finally{busyOff()}
   if(ok){persist=h.perm;await saveCfg();enter();toast(h.perm?"Bağlandı · bu cihazda kalıcı":"Bağlandı · tarayıcı kapanınca silinir")}
-  else{show("setup");$("#repo").value=h.c.repo;$("#folder").value=h.c.folder}
+  else{const m=$("#err").textContent||"Bağlanılamadı";show("setup");$("#repo").value=h.c.repo;$("#folder").value=h.c.folder;$("#err").textContent=m;$("#err").hidden=false;toast(m,"bad")}
   return true}
 async function decodeQr(src,w,h){
   if("BarcodeDetector" in window){try{const r=await new BarcodeDetector({formats:["qr_code"]}).detect(src);if(r.length)return r[0].rawValue}catch{}}
   try{await lib("https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js",()=>window.jsQR)}catch{return""}
-  const s=Math.min(1,1000/Math.max(w,h)),cw=Math.round(w*s),ch=Math.round(h*s),cv=document.createElement("canvas");cv.width=cw;cv.height=ch;
-  const cx=cv.getContext("2d",{willReadFrequently:true});cx.drawImage(src,0,0,cw,ch);const r=jsQR(cx.getImageData(0,0,cw,ch).data,cw,ch);return r?r.data:""}
+  const s=Math.min(1,1280/Math.max(w,h)),cw=Math.round(w*s),ch=Math.round(h*s);
+  if(!scCv)scCv=document.createElement("canvas");scCv.width=cw;scCv.height=ch;
+  const cx=scCv.getContext("2d",{willReadFrequently:true});cx.drawImage(src,0,0,cw,ch);
+  const r=jsQR(cx.getImageData(0,0,cw,ch).data,cw,ch,{inversionAttempts:"attemptBoth"});return r?r.data:""}
 async function startScan(){
   const d=$("#sc"),v=$("#sv"),m=$("#sm");m.textContent="Kamera açılıyor…";if(!d.open)d.showModal();
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){m.textContent="Kamera kullanılamıyor (HTTPS gerekir). \"Fotoğraftan oku\"yu dene.";return}
-  try{scStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false})}catch{m.textContent="Kamera izni verilmedi. \"Fotoğraftan oku\"yu dene.";return}
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){m.textContent="Kamera kullanılamıyor (HTTPS gerekir). \"Fotoğraftan oku\"yu ya da bağlantıyı yapıştırmayı dene.";return}
+  try{scStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}},audio:false})}catch{m.textContent="Kamera izni verilmedi. \"Fotoğraftan oku\"yu dene.";return}
   if(!d.open){stopScan();return}
   v.srcObject=scStream;try{await v.play()}catch{}m.textContent="QR kodu çerçeveye getir";
   const tick=async()=>{if(!scStream)return;
-    if(v.videoWidth){const txt=await decodeQr(v,v.videoWidth,v.videoHeight);if(!scStream)return;if(txt){if(await useQr(txt))return;m.textContent="Bu QR bir Dosya Kasası QR'ı değil"}}
-    scTimer=setTimeout(tick,250)};
+    try{if(v.videoWidth){const txt=await decodeQr(v,v.videoWidth,v.videoHeight);if(!scStream)return;
+      if(txt){if(await useQr(txt))return;m.textContent="Bu QR bir Dosya Kasası QR'ı değil"}}}catch{}
+    if(scStream)scTimer=setTimeout(tick,200)};
   tick()}
 $("#scan").onclick=startScan;$("#scx").onclick=()=>$("#sc").close();$("#sc").onclose=stopScan;$("#sf").onclick=()=>$("#sfi").click();
 $("#sfi").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const m=$("#sm");m.textContent="Fotoğraf okunuyor…";
   try{const bmp=await createImageBitmap(f),txt=await decodeQr(bmp,bmp.width,bmp.height);if(bmp.close)bmp.close();
     if(txt&&await useQr(txt))return;m.textContent=txt?"Bu QR bir Dosya Kasası QR'ı değil":"Fotoğrafta QR bulunamadı"}catch{m.textContent="Fotoğraf okunamadı"}};
+$("#plgo").onclick=async()=>{const t=$("#plink").value.trim(),er=$("#perr2");er.hidden=true;
+  if(!t||!(await useQr(t))){er.textContent="Geçerli bir Dosya Kasası bağlantısı değil";er.hidden=false}else $("#plink").value=""};
 
 /* PWA */
 let dip=null;
@@ -637,8 +652,8 @@ $("#inst").onclick=async()=>{if(!dip)return;dip.prompt();await dip.userChoice;di
 addEventListener("appinstalled",()=>{$("#inst").hidden=true;$("#noinst").hidden=true;$("#insd").hidden=false});
 const standalone=matchMedia("(display-mode:standalone)").matches||navigator.standalone;
 if(standalone){$("#insd").hidden=false;$("#noinst").hidden=true}
-else if(/iphone|ipad|ipod/i.test(navigator.userAgent)){$("#iosh").hidden=false;$("#noinst").hidden=true}
-if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register("sw.js").catch(()=>{});
+else if(/iphone|ipad|ipod/i.test(navigator.userAgent)){$("#iosh").hidden=false;$("#noinst").hidden=true;$("#iosq").hidden=false}
+if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>r.update()).catch(()=>{});
 
 /* başlangıç */
 async function enter(){
@@ -649,26 +664,25 @@ async function enter(){
       if(fs.length)addFiles(fs)}catch{}
   }
   if(p.get("a")==="upload"||p.get("a")==="camera")$("#up").showModal();
-  if(p.size)history.replaceState(null,"",location.pathname);
+  if([...p].length)history.replaceState(null,"",location.pathname);
 }
 function fromHash(){
-  const p=new URLSearchParams(location.hash.slice(1)),r=p.get("r"),t=p.get("t");if(!r||!t)return null;
-  history.replaceState(null,"",location.pathname+location.search);
-  return{c:{repo:parseRepo(r),token:t,folder:cleanFolder(p.get("f")||"dosyalar")},perm:p.get("m")!=="s"}}
+  const h=parseQr(location.href);if(!h)return null;
+  history.replaceState(null,"",location.pathname+location.search);return h}
 async function resume(c){
-  const old=rd(localStorage,"dk-list");
-  if(old&&old.repo===c.repo&&old.folder===c.folder){cfg=c;items=old.items;enter()}
+  const old=rd(localStorage,"dk-list"),cached=old&&old.repo===c.repo&&old.folder===c.folder;
+  if(cached){cfg=c;items=old.items;enter()}
   const ok=await connect(c);
-  if(ok){try{localStorage.setItem("dk-list",JSON.stringify({repo:c.repo,folder:c.folder,items}))}catch{}if(old)render();else enter()}
-  else if(old&&/ulaşılamadı/.test($("#err").textContent)){toast("Çevrimdışısın, son kaydedilen liste gösteriliyor","bad")}
+  if(ok){try{localStorage.setItem("dk-list",JSON.stringify({repo:c.repo,folder:c.folder,items}))}catch{}if(cached)render();else enter()}
+  else if(cached&&/ulaşılamadı/.test($("#err").textContent)){toast("Çevrimdışısın, son kaydedilen liste gösteriliyor","bad")}
   else{cfg=null;show("setup");$("#repo").value=c.repo;$("#folder").value=c.folder}}
 
 (async()=>{
   theme();$("#sort").value=ls.get("dk-sort")||"new";rq();
   const h=fromHash();
-  if(h){busyOn("Bağlanılıyor…","QR ile giriş",true);const ok=await connect(h.c);busyOff();
+  if(h){busyOn("Bağlanılıyor…","QR ile giriş",true);let ok=false;try{ok=await connect(h.c)}finally{busyOff()}
     if(ok){persist=h.perm;await saveCfg();enter();toast(h.perm?"Bağlandı · bu cihazda kalıcı":"Bağlandı · tarayıcı kapanınca silinir");return}
-    show("setup");$("#repo").value=h.c.repo;$("#folder").value=h.c.folder;return}
+    const m=$("#err").textContent;show("setup");$("#repo").value=h.c.repo;$("#folder").value=h.c.folder;$("#err").textContent=m;$("#err").hidden=false;toast(m,"bad");return}
   const ss=rd(sessionStorage,LS),raw=ss||rd(localStorage,LS);persist=!ss;
   if(!raw)return show("setup");
   if(raw.enc){
