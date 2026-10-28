@@ -1,5 +1,5 @@
-const V = "dk-v9";
-const SHELL = ["./", "index.html"];
+const V = "dk-v10";
+const SHELL = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/icon.svg"];
 const SHARE = "dk-share";
 
 self.addEventListener("install", e => {
@@ -53,19 +53,6 @@ self.addEventListener("fetch", e => {
         return Response.redirect(back, 303);
       }
     })());
-    return;
-  }
-
-  // CDN kütüphaneleri (QR, ZIP): bir kez yüklenince çevrimdışı da çalışsın
-  if (r.method === "GET" && u.hostname === "cdnjs.cloudflare.com") {
-    e.respondWith(caches.open(V).then(async c => {
-      const hit = await c.match(r);
-      if (hit) return hit;
-      const res = await fetch(r);
-      // <script> ile gelen yanıtlar "opaque" olur, onları da sakla
-      if (res.ok || res.type === "opaque") c.put(r, res.clone());
-      return res;
-    }));
     return;
   }
 

@@ -284,13 +284,6 @@ function mkIcon(sz,mask){
   try{
     const u=new URL("./",location.href).href;
     $("#fav").href=mkIcon(64);$("#ati").href=mkIcon(180,1);
-    if(/^https?:$/.test(location.protocol)){
-      const man={id:u,name:"Dosya Kasası",short_name:"Kasa",description:"GitHub tabanlı özel dosya kasası",lang:"tr",start_url:u,scope:u,display:"standalone",background_color:"#f4f6f7",theme_color:"#0e7a62",
-        icons:[{src:mkIcon(192),sizes:"192x192",type:"image/png",purpose:"any"},{src:mkIcon(512),sizes:"512x512",type:"image/png",purpose:"any"},{src:mkIcon(512,1),sizes:"512x512",type:"image/png",purpose:"maskable"}],
-        shortcuts:[{name:"Dosya yükle",url:u+"?a=upload"},{name:"Fotoğraf çek",url:u+"?a=camera"}],
-        share_target:{action:u+"?share=1",method:"POST",enctype:"multipart/form-data",params:{files:[{name:"files",accept:["*/*"]}]}}};
-      $("#mf").href="data:application/manifest+json;charset=utf-8,"+encodeURIComponent(JSON.stringify(man));
-    }
   }catch{}
 })();
 
@@ -620,22 +613,39 @@ async function useQr(text){
   if(ok){persist=h.perm;await saveCfg();enter();toast(h.perm?"Bağlandı · bu cihazda kalıcı":"Bağlandı · tarayıcı kapanınca silinir")}
   else{const m=$("#err").textContent||"Bağlanılamadı";show("setup");$("#repo").value=h.c.repo;$("#folder").value=h.c.folder;$("#err").textContent=m;$("#err").hidden=false;toast(m,"bad")}
   return true}
+let scInfo="";
+async function loadJsQR(){
+  if(window.jsQR)return true;
+  for(const u of ["https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js","https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"]){
+    try{await lib(u,()=>window.jsQR);if(window.jsQR)return true}catch{}
+  }
+  return false}
 async function decodeQr(src,w,h){
+  scInfo="";
   if("BarcodeDetector" in window){try{const r=await new BarcodeDetector({formats:["qr_code"]}).detect(src);if(r.length)return r[0].rawValue}catch{}}
-  try{await lib("https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js",()=>window.jsQR)}catch{return""}
-  const s=Math.min(1,1280/Math.max(w,h)),cw=Math.round(w*s),ch=Math.round(h*s);
-  if(!scCv)scCv=document.createElement("canvas");scCv.width=cw;scCv.height=ch;
-  const cx=scCv.getContext("2d",{willReadFrequently:true});cx.drawImage(src,0,0,cw,ch);
-  const r=jsQR(cx.getImageData(0,0,cw,ch).data,cw,ch,{inversionAttempts:"attemptBoth"});return r?r.data:""}
+  if(!(await loadJsQR())){scInfo="QR kütüphanesi yüklenemedi, bağlantını kontrol et";return""}
+  if(!scCv)scCv=document.createElement("canvas");
+  const cx=scCv.getContext("2d",{willReadFrequently:true});
+  for(const max of [1280,640]){
+    const s=Math.min(1,max/Math.max(w,h)),cw=Math.round(w*s),ch=Math.round(h*s);
+    scCv.width=cw;scCv.height=ch;cx.drawImage(src,0,0,cw,ch);
+    const r=jsQR(cx.getImageData(0,0,cw,ch).data,cw,ch,{inversionAttempts:"attemptBoth"});
+    if(r&&r.data)return r.data}
+  return""}
 async function startScan(){
   const d=$("#sc"),v=$("#sv"),m=$("#sm");m.textContent="Kamera açılıyor…";if(!d.open)d.showModal();
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){m.textContent="Kamera kullanılamıyor (HTTPS gerekir). \"Fotoğraftan oku\"yu ya da bağlantıyı yapıştırmayı dene.";return}
-  try{scStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}},audio:false})}catch{m.textContent="Kamera izni verilmedi. \"Fotoğraftan oku\"yu dene.";return}
+  try{scStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}},audio:false})}catch(e){const k=e&&e.name;m.textContent=k==="NotFoundError"?"Bu cihazda kamera bulunamadı. Bağlantıyı yapıştırmayı dene.":k==="NotReadableError"?"Kamera başka bir uygulama tarafından kullanılıyor.":k==="NotAllowedError"?"Kamera izni verilmedi. Uygulama ayarlarından kamerayı aç ya da bağlantıyı yapıştır.":"Kamera açılamadı ("+(k||"hata")+"). Bağlantıyı yapıştırmayı dene.";return}
   if(!d.open){stopScan();return}
   v.srcObject=scStream;try{await v.play()}catch{}m.textContent="QR kodu çerçeveye getir";
   const tick=async()=>{if(!scStream)return;
-    try{if(v.videoWidth){const txt=await decodeQr(v,v.videoWidth,v.videoHeight);if(!scStream)return;
-      if(txt){if(await useQr(txt))return;m.textContent="Bu QR bir Dosya Kasası QR'ı değil"}}}catch{}
+    try{
+      if(v.videoWidth){
+        const txt=await decodeQr(v,v.videoWidth,v.videoHeight);if(!scStream)return;
+        if(txt){if(await useQr(txt))return;m.textContent="Bu QR bir Dosya Kasası QR'ı değil"}
+        else m.textContent=scInfo||"QR aranıyor… ("+v.videoWidth+"×"+v.videoHeight+")";
+      }else m.textContent="Kamera görüntüsü bekleniyor…";
+    }catch(e){m.textContent="Okuma hatası: "+(e.message||e.name)}
     if(scStream)scTimer=setTimeout(tick,200)};
   tick()}
 $("#scan").onclick=startScan;$("#scx").onclick=()=>$("#sc").close();$("#sc").onclose=stopScan;$("#sf").onclick=()=>$("#sfi").click();
