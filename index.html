@@ -231,6 +231,7 @@ body{overscroll-behavior-y:contain}
 <section id="v-notes" hidden>
   <h1>Notlar</h1>
   <p class="lead">Notların da özel deponda durur, yazdıkça otomatik kaydedilir.</p>
+  <button class="pri big" id="nnew" type="button">+ Yeni not</button>
   <input id="nq" type="search" placeholder="Notlarda ara" aria-label="Notlarda ara" autocomplete="off" style="margin-bottom:14px">
   <div id="nlist" class="ngrid"></div>
 </section>
@@ -569,7 +570,7 @@ addEventListener("touchend",()=>{if(py&&pd>90)doRefresh();py=pd=0;ptr.style.opac
 /* işlem sayfası */
 function sheet(n){
   const k=kind(n),b=$("#shb");$("#sht").textContent=shown(n);
-  const rows=[...(k?[["Önizle",()=>openPv(n)]]:[]),["İndir",()=>guard(async()=>{busyOn("İndiriliyor…",shown(n));dlBlob(await blobOf(n),n)})],...(canShare?[["Paylaş",()=>guard(async()=>{busyOn("Hazırlanıyor…",shown(n));await shareFile(n)})]]:[]),["Not ekle",()=>{show("notes");newNote(n)}],[favs.has(n)?"Yıldızı kaldır":"Yıldızla",()=>{favs.has(n)?favs.delete(n):favs.add(n);saveFavs();render()}],["Yeniden adlandır",()=>guard(()=>rename(n))],["Sil",()=>remove([n]),"dn"]];
+  const rows=[...(k?[["Önizle",()=>openPv(n)]]:[]),["İndir",()=>guard(async()=>{busyOn("İndiriliyor…",shown(n));dlBlob(await blobOf(n),n)})],...(canShare?[["Paylaş",()=>guard(async()=>{busyOn("Hazırlanıyor…",shown(n));await shareFile(n)})]]:[]),[favs.has(n)?"Yıldızı kaldır":"Yıldızla",()=>{favs.has(n)?favs.delete(n):favs.add(n);saveFavs();render()}],["Yeniden adlandır",()=>guard(()=>rename(n))],["Sil",()=>remove([n]),"dn"]];
   b.replaceChildren(...rows.map(([t,f,c])=>{const x=document.createElement("button");x.textContent=t;if(c)x.className=c;x.onclick=()=>{$("#sh").close();f()};return x}));
   $("#sh").showModal();
 }
@@ -737,9 +738,9 @@ async function loadNotes(){
 function renderNotes(){
   const q=$("#nq").value.trim().toLocaleLowerCase("tr");
   const v=notes.filter(n=>!nDel.has(n.id)&&(!q||((n.t||"")+" "+(n.b||"")).toLocaleLowerCase("tr").includes(q))).sort((a,b)=>(b.p?1:0)-(a.p?1:0)||(b.u||0)-(a.u||0));
-  $("#nlist").innerHTML=v.length?v.map((n,i)=>`<article class="nc" tabindex="0" role="button" data-id="${E(n.id)}" style="--nc:${n.c||"var(--cd)"};--d:${Math.min(i,12)*40}ms">${n.p?`<span class="np">${ic("pin",1)}</span>`:""}<b>${E(n.t||"Başlıksız")}</b><p>${E(prev(n.b))}</p>${n.f?`<small>📎 ${E(shown(n.f))}</small>`:""}<small>${new Date(n.u||Date.now()).toLocaleDateString("tr-TR")}</small></article>`).join(""):`<div class="empty" style="grid-column:1/-1"><b>${nLoaded?"Not yok":"Yükleniyor…"}</b>${nLoaded?"Yeni not için + düğmesine dokun.":""}</div>`;
+  $("#nlist").innerHTML=v.length?v.map((n,i)=>`<article class="nc" tabindex="0" role="button" data-id="${E(n.id)}" style="--nc:${n.c||"var(--cd)"};--d:${Math.min(i,12)*40}ms">${n.p?`<span class="np">${ic("pin",1)}</span>`:""}<b>${E(n.t||"Başlıksız")}</b><p>${E(prev(n.b))}</p><small>${new Date(n.u||Date.now()).toLocaleDateString("tr-TR")}</small></article>`).join(""):`<div class="empty" style="grid-column:1/-1"><b>${nLoaded?"Not yok":"Yükleniyor…"}</b>${nLoaded?"Yeni not için + düğmesine dokun.":""}</div>`;
 }
-function newNote(f){openNote({id:nid(),t:"",b:"",c:"",p:0,f:f||"",u:Date.now()})}
+function newNote(){openNote({id:nid(),t:"",b:"",c:"",p:0,f:"",u:Date.now()})}
 function openNote(n){if(!n)return;cur=n;n._dirty=0;$("#nt").value=n.t||"";$("#nb").value=n.b||"";nUI();$("#nst").textContent=n.sha?"Kaydedildi":"Yeni not";$("#nd").showModal();if(!n.sha&&!n.t&&!n.b)setTimeout(()=>$("#nt").focus(),80)}
 function nUI(){$("#nsw").innerHTML=NC.map(c=>`<button type="button" class="sw${(cur.c||"")===c?" on":""}" data-c="${c}" style="--c:${c||"var(--cd)"}" aria-label="Renk"></button>`).join("");$("#ndp").classList.toggle("on",!!cur.p)}
 function sched(){cur._dirty=1;$("#nst").textContent="Yazılıyor…";clearTimeout(dTm);dTm=setTimeout(flushNote,1200)}
@@ -769,7 +770,7 @@ async function delNote(n){try{const r=await gh("DELETE",npath(n.id),{message:"No
 $("#nlist").onclick=e=>{const c=e.target.closest(".nc");if(c)openNote(notes.find(n=>n.id===c.dataset.id))};
 $("#nlist").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){const c=e.target.closest(".nc");if(c){e.preventDefault();c.click()}}};
 $("#list").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.classList.contains("it"))e.target.click()});
-$("#nq").oninput=renderNotes;
+$("#nq").oninput=renderNotes;$("#nnew").onclick=()=>newNote();
 function sharedNote(s){const n={id:nid(),t:s.title||"Paylaşılan",b:[s.text,s.url].filter(Boolean).join("\n"),c:"",p:0,f:"",u:Date.now()};notes.push(n);sv=sv.then(()=>persistNote(n)).then(()=>{toast("Paylaşılan metin not olarak kaydedildi");if(view_==="notes")renderNotes()})}
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&cur&&cur._dirty)flushNote()});
 addEventListener("pagehide",()=>{if(cur&&cur._dirty)flushNote()});
