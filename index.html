@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Kasa">
 <title>Dosya Kasası</title>
-<link rel="manifest" id="mf" href="manifest.webmanifest">
+<link rel="manifest" id="mf">
 <link rel="icon" id="fav">
 <link rel="apple-touch-icon" id="ati">
 <style>
@@ -139,6 +139,32 @@ body{overscroll-behavior-y:contain}
 .mt{height:12px;border-radius:9px;background:var(--as);overflow:hidden;margin:6px 0 8px}.mt i.warn{background:#e0a800}.mt i.bad{background:var(--dn)}
 @media(min-width:900px){.dsk{display:inline-flex}.sq{max-width:440px}}
 @media(max-width:600px){.sb button{padding:4px 9px}.sb{padding-left:12px}}
+
+.nav button{transition:color .2s,background .2s,transform .15s}.nav button.on{animation:pop .35s cubic-bezier(.2,.9,.3,1.3)}
+.nav .fab{animation:pulse 3.2s ease-in-out infinite}@keyframes pulse{50%{box-shadow:0 8px 28px rgba(14,122,98,.7)}}
+@media(max-width:600px){.nav button{padding:5px 14px}.nav .fab{margin:0 2px}}
+.ngrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.nc{position:relative;background:color-mix(in srgb,var(--nc,var(--cd)) 26%,var(--cd));border:1px solid var(--bd);border-radius:18px;padding:14px 15px;cursor:pointer;display:grid;gap:6px;align-content:start;min-height:110px;animation:pop .45s cubic-bezier(.2,.9,.3,1.2) both;animation-delay:var(--d,0ms);transition:transform .2s,box-shadow .2s}
+.nc:hover{transform:translateY(-3px);box-shadow:var(--sh)}.nc:active{transform:scale(.98)}
+.nc b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nc p{color:var(--mu);font-size:13.5px;white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;margin:0;word-break:break-word}
+.nc small{color:var(--mu);font-size:12px}.np{position:absolute;top:10px;right:10px;color:var(--ac)}.nc b{padding-right:20px}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.94)}}
+#nd{width:min(680px,100vw);height:min(86dvh,740px);padding:0;overflow:hidden}
+#nd[open]{display:flex;flex-direction:column;animation:sheetup .32s cubic-bezier(.2,.9,.3,1)}
+@keyframes sheetup{from{opacity:0;transform:translateY(40px)}}
+#nt{border:0;border-radius:0;font-size:21px;font-weight:700;padding:14px 18px;box-shadow:none!important}
+#nb{flex:1;border:0;outline:0;resize:none;background:transparent;color:var(--tx);font:inherit;padding:4px 18px 14px;line-height:1.65;min-height:0}
+#nst{font-size:13px;color:var(--mu);font-weight:500}
+.swr{display:flex;gap:12px;padding:10px 16px calc(10px + var(--sa));border-top:1px solid var(--bd)}
+.sw{width:32px;height:32px;min-height:0;padding:0;border-radius:50%;background:var(--c);border:2px solid var(--bd)}.sw.on{border-color:var(--tx);transform:scale(1.18)}
+.ib.on{color:var(--ac);background:var(--as)}
+@media(max-width:600px){#nd{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;border-radius:0;margin:0}}
+.sk{height:110px;border-radius:18px;background:linear-gradient(90deg,var(--cd),var(--as),var(--cd));background-size:200% 100%;animation:shim 1.2s linear infinite}
+@keyframes shim{to{background-position:-200% 0}}
+.inb{position:fixed;left:12px;right:12px;bottom:calc(92px + var(--sa));z-index:11;display:flex;gap:12px;align-items:center;background:var(--cd);border:1px solid var(--bd);border-radius:18px;padding:10px 10px 10px 12px;box-shadow:var(--sh);animation:sheetup .45s cubic-bezier(.2,.9,.3,1)}
+.inb div{flex:1;min-width:0}.inb small{display:block;color:var(--mu);font-size:12.5px;line-height:1.3}
+@media(min-width:900px){.inb{left:auto;right:24px;bottom:24px;width:400px}}
 </style>
 </head>
 <body>
@@ -198,8 +224,15 @@ body{overscroll-behavior-y:contain}
   </div>
   <button class="dz" id="dz" type="button"><b>Dosyaları buraya sürükle</b> ya da tıklayıp seç · Ctrl+V ile yapıştır</button>
   <div class="tot" id="tot" hidden><div class="tb"><i id="tbi"></i></div><span id="tt"></span></div>
-  <div class="queue" id="queue"></div>
+  <div class="queue" id="queue" aria-live="polite"></div>
   <div id="list" class="grid"></div>
+</section>
+
+<section id="v-notes" hidden>
+  <h1>Notlar</h1>
+  <p class="lead">Notların da özel deponda durur, yazdıkça otomatik kaydedilir.</p>
+  <input id="nq" type="search" placeholder="Notlarda ara" aria-label="Notlarda ara" autocomplete="off" style="margin-bottom:14px">
+  <div id="nlist" class="ngrid"></div>
 </section>
 
 <section id="v-set" hidden>
@@ -216,17 +249,25 @@ body{overscroll-behavior-y:contain}
 
 <nav class="nav" id="nav" hidden>
   <button data-v="files" class="on"><span data-ic="fold"></span>Dosyalar</button>
+  <button data-v="notes"><span data-ic="note"></span>Notlar</button>
   <button class="fab" id="fab" aria-label="Dosya yükle"><span data-ic="plus"></span><span class="ft">Dosya yükle</span></button>
   <button data-v="set"><span data-ic="gear"></span>Ayarlar</button>
 </nav>
 <div class="sb" id="sb" hidden><b id="sn"></b><button id="sall2">Tümü</button><button id="sdl">İndir</button><button id="szip">ZIP</button><button id="srm" class="dn">Sil</button><button id="sx" aria-label="Seçimi kaldır">✕</button></div>
 
+<dialog id="nd" aria-label="Not düzenle">
+  <div class="ph"><button class="ib" id="ndx" aria-label="Kapat">‹</button><b id="nst">Yeni not</b><button class="ib" id="ndp" aria-label="Sabitle"><span data-ic="pin"></span></button><button class="ib dn" id="ndd" aria-label="Sil"><span data-ic="tr"></span></button></div>
+  <input id="nt" type="text" placeholder="Başlık" autocomplete="off" aria-label="Başlık">
+  <textarea id="nb" placeholder="Notunu yaz…  (&quot;- [ ] &quot; ile yapılacak listesi)" aria-label="Not"></textarea>
+  <div class="swr" id="nsw"></div>
+</dialog>
+<div class="inb" id="inb" hidden><span class="lg" style="width:42px;height:42px"></span><div><b>Uygulamayı yükle</b><small>Ana ekrandan aç, paylaş menüsünde görün</small></div><button class="pri" id="inbi">Yükle</button><button class="ib" id="inbx" aria-label="Kapat">✕</button></div>
 <dialog id="up" class="sheet"><h3>Yükle</h3>
   <button id="pick"><span data-ic="fold"></span>Dosya seç</button><button id="cam"><span data-ic="plus"></span>Fotoğraf çek</button>
   <p class="muted">Dosyaları sayfaya sürükleyebilir ya da Ctrl+V ile yapıştırabilirsin. En fazla 100 MB, 25 MB üstü başarısız olabilir.</p>
   <button id="upx">Kapat</button></dialog>
 <dialog id="sh" class="sheet"><h3 id="sht" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></h3><div id="shb" style="display:grid;gap:8px"></div><button id="shx">Kapat</button></dialog>
-<dialog id="pd"><h3>Uygulama PIN'i</h3><p class="muted">4-8 rakam. Token bu PIN ile şifrelenip saklanır. PIN'i unutursan bağlantıyı sıfırlaman gerekir.</p>
+<dialog id="pd"><h3>Uygulama PIN'i</h3><p class="muted">6-8 rakam. Token bu PIN ile şifrelenip saklanır. PIN'i unutursan bağlantıyı sıfırlaman gerekir.</p>
   <label>Yeni PIN<input type="password" id="pn1" inputmode="numeric" maxlength="8" autocomplete="off"></label>
   <label>Tekrar<input type="password" id="pn2" inputmode="numeric" maxlength="8" autocomplete="off"></label>
   <div class="err" id="perr" hidden></div><div class="row"><button class="pri" id="pok">Kaydet</button><button id="pcx">Vazgeç</button></div></dialog>
@@ -243,13 +284,14 @@ body{overscroll-behavior-y:contain}
 <div class="ov" id="ov">Yüklemek için bırak</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js" defer></script>
 <script>
 "use strict";
+const safeSt=n=>{try{const t=window[n];t.getItem("x");return t}catch{const m=new Map();return{getItem:k=>m.has(k)?m.get(k):null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k)}}};
+const LST=safeSt("localStorage"),SST=safeSt("sessionStorage");
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const E=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const API="https://api.github.com",LS="dk3",MAX=100*1048576;
-const IC={dl:"M12 3v12m0 0l-4-4m4 4l4-4M4 20h16",st:"M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z",more:"M5 12h.01M12 12h.01M19 12h.01",plus:"M12 5v14M5 12h14",fold:"M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z",gear:"M4 7h9m4 0h3M4 17h3m4 0h9M15 5v4M9 15v4",grid:"M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z",list:"M4 6h16M4 12h16M4 18h16",rf:"M20 11a8 8 0 10-2.3 5.7M20 4v7h-7"};
+const IC={dl:"M12 3v12m0 0l-4-4m4 4l4-4M4 20h16",st:"M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z",more:"M5 12h.01M12 12h.01M19 12h.01",plus:"M12 5v14M5 12h14",fold:"M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z",gear:"M4 7h9m4 0h3M4 17h3m4 0h9M15 5v4M9 15v4",grid:"M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z",list:"M4 6h16M4 12h16M4 18h16",rf:"M20 11a8 8 0 10-2.3 5.7M20 4v7h-7",note:"M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h5",pin:"M12 17v5M9 3h6l-1 6 4 4H6l4-4z",tr:"M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"};
 const ic=(k,f)=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="${f?"currentColor":"none"}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${IC[k]}"/></svg>`;
 const fmt=n=>n>=1073741824?(n/1073741824).toFixed(2)+" GB":n>=1048576?(n/1048576).toFixed(1)+" MB":n>=1024?Math.round(n/1024)+" KB":n+" B";
 const ext=n=>n.includes(".")?n.split(".").pop().toLowerCase():"";
@@ -261,10 +303,10 @@ const MIME={png:"image/png",jpg:"image/jpeg",jpeg:"image/jpeg",gif:"image/gif",w
 const kind=n=>{const e=ext(n);for(const k in PV)if(PV[k].split(" ").includes(e))return k;return""};
 const mime=n=>MIME[ext(n)]||"application/octet-stream";
 const canShare=typeof navigator.canShare==="function"&&typeof navigator.share==="function";
-const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}}};
+const ls={get:k=>{try{return LST.getItem(k)}catch{return null}},set:(k,v)=>{try{LST.setItem(k,v)}catch{}}};
 const rd=(st,k)=>{try{return JSON.parse(st.getItem(k)||"null")}catch{return null}};
 const saveFavs=()=>ls.set("dk-fav",JSON.stringify([...favs]));
-let cfg=null,info=null,items=[],sel=new Set(),pend=new Set(),queue=[],filter="all",mode=ls.get("dk-mode")||"grid",favs=new Set(rd(localStorage,"dk-fav")||[]),running=false,op=false,seq=0,curPin=null,persist=true,view_="setup";
+let cfg=null,info=null,items=[],sel=new Set(),pend=new Set(),queue=[],filter="all",mode=ls.get("dk-mode")||"grid",favs=new Set(rd(LST,"dk-fav")||[]),running=false,op=false,seq=0,curPin=null,persist=true,view_="setup";
 const thumbs=new Map();
 
 /* kodla üretilen logo, ikonlar ve manifest */
@@ -282,8 +324,11 @@ function mkIcon(sz,mask){
   return c.toDataURL("image/png")}
 (function(){
   try{
-    const u=new URL("./",location.href).href;
     $("#fav").href=mkIcon(64);$("#ati").href=mkIcon(180,1);
+    if(!/^https?:$/.test(location.protocol))return;
+    const B=new URL("./",location.href).href,I=(z,m)=>({src:mkIcon(z,m),sizes:z+"x"+z,type:"image/png",purpose:m?"maskable":"any"});
+    const m={id:B,name:"Dosya Kasası",short_name:"Kasa",description:"Özel dosya ve not kasası",lang:"tr",start_url:B+"?src=pwa",scope:B,display:"standalone",display_override:["standalone","minimal-ui"],orientation:"any",background_color:"#f3f6f6",theme_color:"#0e7a62",categories:["productivity","utilities"],icons:[I(192),I(512),I(512,1)],shortcuts:[{name:"Dosya yükle",url:B+"?a=upload"},{name:"Yeni not",url:B+"?a=note"}],share_target:{action:B+"?share=1",method:"POST",enctype:"multipart/form-data",params:{title:"title",text:"text",url:"url",files:[{name:"files",accept:["*/*"]}]}}};
+    $("#mf").href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));
   }catch{}
 })();
 
@@ -300,7 +345,7 @@ function toast(m,t,act,ms){const d=document.createElement("div");d.className="to
 function busyOn(t,s,blk){const b=$("#busy");b.hidden=false;b.classList.toggle("blk",!!blk);$("#bt").textContent=t;$("#bs").textContent=s||""}
 const busyOff=()=>{$("#busy").hidden=true};
 function fail(e){toast(e.message||String(e),"bad");if(/^401/.test(e.message||""))show("setup")}
-async function guard(fn){if(op)return;op=true;try{await fn()}catch(e){fail(e)}finally{op=false;busyOff()}}
+async function guard(fn){if(op)return toast("Önceki işlem sürüyor, birazdan tekrar dene");op=true;try{await fn()}catch(e){fail(e)}finally{op=false;busyOff()}}
 const lib=(u,t)=>new Promise((ok,no)=>{if(t())return ok();const s=document.createElement("script");s.src=u;s.onload=ok;s.onerror=()=>no(new Error("Kütüphane yüklenemedi, bağlantını kontrol et"));document.head.append(s)});
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 $$("[data-ic]").forEach(e=>e.innerHTML=ic(e.dataset.ic));
@@ -312,11 +357,13 @@ async function seal(pin,txt){const salt=crypto.getRandomValues(new Uint8Array(16
 async function unseal(pin,o){return new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:s2b(o.i)},await key(pin,s2b(o.s)),s2b(o.c)))}
 async function saveCfg(){
   const o={repo:cfg.repo,folder:cfg.folder};if(curPin)o.enc=await seal(curPin,cfg.token);else o.tok=cfg.token;
-  const a=persist?localStorage:sessionStorage,b=persist?sessionStorage:localStorage;
+  const a=persist?LST:SST,b=persist?SST:LST;
   try{a.setItem(LS,JSON.stringify(o));b.removeItem(LS)}catch{toast("Tarayıcı depolamaya izin vermiyor, bağlantı kalıcı olmayacak","bad")}
 }
 let hiddenAt=0;
-document.addEventListener("visibilitychange",()=>{if(document.hidden)hiddenAt=Date.now();else if(curPin&&hiddenAt&&Date.now()-hiddenAt>60000)location.reload()});
+document.addEventListener("visibilitychange",()=>{if(document.hidden){hiddenAt=Date.now();return}
+  if(curPin&&hiddenAt&&Date.now()-hiddenAt>60000){$$("dialog[open]").forEach(d=>d.close());$("#lock").hidden=false;$("#pin").value="";$("#lerr").hidden=true;
+    $("#lf").onsubmit=e=>{e.preventDefault();if($("#pin").value===curPin){$("#lock").hidden=true}else{$("#lerr").textContent="PIN yanlış";$("#lerr").hidden=false}$("#pin").value=""};setTimeout(()=>$("#pin").focus(),60)}});
 
 /* GitHub API */
 async function gh(method,path,body,accept){
@@ -361,12 +408,12 @@ async function shareFile(n){
 
 /* görünümler */
 function show(v){
-  view_=v;["setup","files","set"].forEach(x=>$("#v-"+x).hidden=x!==v);
+  view_=v;["setup","files","notes","set"].forEach(x=>$("#v-"+x).hidden=x!==v);
   $("#nav").hidden=!cfg;$("#wrap").classList.toggle("nonav",!cfg);$$(".nav [data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
   $("#sq").hidden=v!=="files";if(v!=="files")$("#sb").hidden=true;else render();
   if(v==="set"){$("#sinfo").textContent=`${cfg.repo} · ${cfg.folder} · özel depo${info?" · depo boyutu "+fmt(info.size*1024):""}`;pinUI();storUI()}
   if(v==="setup"){$("#cancel").hidden=!cfg;if(cfg){$("#repo").value=cfg.repo;$("#folder").value=cfg.folder;$("#tok").value="";$("#tok").placeholder="Boş bırakırsan mevcut token kullanılır";$("#rem").checked=persist}}
-  scrollTo(0,0);
+  if(v==="notes")loadNotes();scrollTo(0,0);
 }
 $$(".nav [data-v]").forEach(b=>b.onclick=()=>show(b.dataset.v));
 const parseRepo=v=>{const p=v.trim().replace(/^https?:\/\/github\.com\//i,"").replace(/\.git$/i,"").replace(/^\/+|\/+$/g,"").split("/");return p.length>=2&&p[0]&&p[1]?p[0]+"/"+p[1]:""};
@@ -393,7 +440,7 @@ $("#form").onsubmit=async e=>{
 };
 $("#cancel").onclick=()=>show("files");
 $("#sedit").onclick=()=>show("setup");
-const wipe=()=>{try{localStorage.removeItem(LS);sessionStorage.removeItem(LS);localStorage.removeItem("dk-list")}catch{}location.reload()};
+const wipe=()=>{try{LST.removeItem(LS);SST.removeItem(LS);LST.removeItem("dk-list")}catch{}location.reload()};
 $("#sout").onclick=()=>{if(confirm("Bağlantı bu cihazdan silinsin mi? Dosyaların GitHub'da kalır."))wipe()};
 
 /* PIN */
@@ -401,10 +448,10 @@ function pinUI(){$("#pinfo").textContent=curPin?"PIN açık. Uygulama arka plana
 $("#pset").onclick=()=>{$("#pn1").value=$("#pn2").value="";$("#perr").hidden=true;$("#pd").showModal()};
 $("#pcx").onclick=()=>$("#pd").close();
 $("#pok").onclick=async()=>{const a=$("#pn1").value,b=$("#pn2").value,er=$("#perr");
-  if(!/^\d{4,8}$/.test(a)){er.textContent="PIN 4-8 rakam olmalı";er.hidden=false;return}
+  if(!/^\d{6,8}$/.test(a)){er.textContent="PIN 6-8 rakam olmalı";er.hidden=false;return}
   if(a!==b){er.textContent="PIN'ler eşleşmiyor";er.hidden=false;return}
   if(!crypto.subtle){er.textContent="Şifreleme için HTTPS gerekir";er.hidden=false;return}
-  curPin=a;await saveCfg();$("#pd").close();pinUI();toast("PIN kaydedildi")};
+  curPin=a;await saveCfg();cacheList();$("#pd").close();pinUI();toast("PIN kaydedildi")};
 $("#prm").onclick=async()=>{if(!confirm("PIN kaldırılsın mı? Token şifresiz saklanır."))return;curPin=null;await saveCfg();pinUI();toast("PIN kaldırıldı")};
 $("#plock").onclick=()=>location.reload();
 $("#lrs").onclick=()=>{if(confirm("Kayıtlı bağlantı silinecek. Devam edilsin mi?"))wipe()};
@@ -431,7 +478,7 @@ async function run(){
   await refresh();setTimeout(()=>{queue=queue.filter(x=>x.cls!=="ok");rq()},2500);
 }
 $("#dz").onclick=()=>$("#fi").click();
-$("#fab").onclick=()=>{show("files");$("#up").showModal()};
+$("#fab").onclick=()=>{if(view_==="notes")newNote();else{show("files");$("#up").showModal()}};
 $("#pick").onclick=()=>{$("#up").close();$("#fi").click()};$("#cam").onclick=()=>{$("#up").close();$("#fc").click()};
 $("#upx").onclick=()=>$("#up").close();
 $("#fi").onchange=$("#fc").onchange=e=>{addFiles([...e.target.files]);e.target.value=""};
@@ -445,8 +492,9 @@ addEventListener("paste",e=>{if(isFiles()&&e.clipboardData&&e.clipboardData.file
 
 /* liste */
 async function refresh(){
-  try{items=await listFiles();try{localStorage.setItem("dk-list",JSON.stringify({repo:cfg.repo,folder:cfg.folder,items}))}catch{}const r=await gh("GET","/repos/"+cfg.repo);if(r.ok)info=await r.json();
+  try{items=await listFiles();cacheList();const r=await gh("GET","/repos/"+cfg.repo);if(r.ok)info=await r.json();
     if(items.length>=1000)toast("Klasörde 1000 dosyaya ulaşıldı, GitHub bundan fazlasını listelemez. Ayarlardan yeni klasör seç.","bad")}catch(e){fail(e)}
+  for(const[k,u]of thumbs)if(!items.some(i=>i.name===k)){URL.revokeObjectURL(u);thumbs.delete(k)}
   sel=new Set([...sel].filter(n=>items.some(i=>i.name===n)));render();
 }
 function view(){
@@ -466,7 +514,7 @@ function render(){
   $("#list").innerHTML=v.length?v.map((i,ix)=>{
     const n=shown(i.name),e=ext(n),on=sel.has(i.name),a=E(i.name),t=tsOf(i.name),c=cat(n),u=thumbs.get(i.name);
     const th=c==="img"&&i.size<4e6?(u?`<img src="${u}" alt="" loading="lazy">`:"") :"";
-    return grp(i,ix,v)+`<article class="it${on?" on":""}" data-n="${a}"><label class="ck"><input type="checkbox" data-c ${on?"checked":""} aria-label="Seç"></label><div class="th ${c}" ${c==="img"&&i.size<4e6&&!u?`data-t="${a}"`:""}>${th||E(e.slice(0,4)||"dos")}</div><div class="inf"><b title="${E(n)}">${E(n)}</b><small>${fmt(i.size)}${t?" · "+new Date(t).toLocaleDateString("tr-TR"):""}</small></div><div class="ac"><button data-a="fav" class="${favs.has(i.name)?"on":""}" aria-label="Yıldızla">${ic("st",favs.has(i.name))}</button><button data-a="more" aria-label="İşlemler">${ic("more")}</button></div></article>`}).join("")
+    return grp(i,ix,v)+`<article class="it${on?" on":""}" data-n="${a}" tabindex="0" role="button"><label class="ck"><input type="checkbox" data-c ${on?"checked":""} aria-label="Seç"></label><div class="th ${c}" ${c==="img"&&i.size<4e6&&!u?`data-t="${a}"`:""}>${th||E(e.slice(0,4)||"dos")}</div><div class="inf"><b title="${E(n)}">${E(n)}</b><small>${fmt(i.size)}${t?" · "+new Date(t).toLocaleDateString("tr-TR"):""}</small></div><div class="ac"><button data-a="fav" class="${favs.has(i.name)?"on":""}" aria-label="Yıldızla">${ic("st",favs.has(i.name))}</button><button data-a="more" aria-label="İşlemler">${ic("more")}</button></div></article>`}).join("")
     :(items.length?`<div class="empty"><b>Eşleşen dosya yok</b>Aramayı ya da filtreyi değiştir.</div>`:`<div class="emp empty">${EMPTY}<b>Kasan boş</b><span>İlk dosyanı yükle. Fotoğraf, belge ya da herhangi bir dosya olabilir.</span><button class="pri" data-up>Dosya yükle</button></div>`);
   if(io)$$("[data-t]").forEach(el=>io.observe(el));
   $("#sb").hidden=!sel.size||view_!=="files";$("#sn").textContent=sel.size+" seçili";
@@ -521,7 +569,7 @@ addEventListener("touchend",()=>{if(py&&pd>90)doRefresh();py=pd=0;ptr.style.opac
 /* işlem sayfası */
 function sheet(n){
   const k=kind(n),b=$("#shb");$("#sht").textContent=shown(n);
-  const rows=[...(k?[["Önizle",()=>openPv(n)]]:[]),["İndir",()=>guard(async()=>{busyOn("İndiriliyor…",shown(n));dlBlob(await blobOf(n),n)})],...(canShare?[["Paylaş",()=>guard(async()=>{busyOn("Hazırlanıyor…",shown(n));await shareFile(n)})]]:[]),[favs.has(n)?"Yıldızı kaldır":"Yıldızla",()=>{favs.has(n)?favs.delete(n):favs.add(n);saveFavs();render()}],["Yeniden adlandır",()=>guard(()=>rename(n))],["Sil",()=>remove([n]),"dn"]];
+  const rows=[...(k?[["Önizle",()=>openPv(n)]]:[]),["İndir",()=>guard(async()=>{busyOn("İndiriliyor…",shown(n));dlBlob(await blobOf(n),n)})],...(canShare?[["Paylaş",()=>guard(async()=>{busyOn("Hazırlanıyor…",shown(n));await shareFile(n)})]]:[]),["Not ekle",()=>{show("notes");newNote(n)}],[favs.has(n)?"Yıldızı kaldır":"Yıldızla",()=>{favs.has(n)?favs.delete(n):favs.add(n);saveFavs();render()}],["Yeniden adlandır",()=>guard(()=>rename(n))],["Sil",()=>remove([n]),"dn"]];
   b.replaceChildren(...rows.map(([t,f,c])=>{const x=document.createElement("button");x.textContent=t;if(c)x.className=c;x.onclick=()=>{$("#sh").close();f()};return x}));
   $("#sh").showModal();
 }
@@ -657,33 +705,106 @@ $("#plgo").onclick=async()=>{const t=$("#plink").value.trim(),er=$("#perr2");er.
 
 /* PWA */
 let dip=null;
-addEventListener("beforeinstallprompt",e=>{e.preventDefault();dip=e;$("#inst").hidden=false;$("#noinst").hidden=true});
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();dip=e;ibShow();$("#inst").hidden=false;$("#noinst").hidden=true});
 $("#inst").onclick=async()=>{if(!dip)return;dip.prompt();await dip.userChoice;dip=null;$("#inst").hidden=true};
 addEventListener("appinstalled",()=>{$("#inst").hidden=true;$("#noinst").hidden=true;$("#insd").hidden=false});
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
 const standalone=matchMedia("(display-mode:standalone)").matches||navigator.standalone;
 if(standalone){$("#insd").hidden=false;$("#noinst").hidden=true}
-else if(/iphone|ipad|ipod/i.test(navigator.userAgent)){$("#iosh").hidden=false;$("#noinst").hidden=true;$("#iosq").hidden=false}
+else if(isIOS){$("#iosh").hidden=false;$("#noinst").hidden=true;$("#iosq").hidden=false}
 if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>r.update()).catch(()=>{});
+
+/* ===== NOTLAR ===== */
+function cacheList(){try{if(curPin)LST.removeItem("dk-list");else LST.setItem("dk-list",JSON.stringify({repo:cfg.repo,folder:cfg.folder,items}))}catch{}}
+let notes=[],nLoaded=false,cur=null,sv=Promise.resolve(),dTm=0;const nDel=new Set();
+const NC=["","#fbbf24","#4ade80","#38bdf8","#f472b6","#a78bfa"],nid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const nbase=()=>base()+"/.notlar",npath=id=>nbase()+"/"+id+".json";
+const prev=b=>(b||"").replace(/^- \[ \] /gm,"☐ ").replace(/^- \[[xX]\] /gm,"☑ ").slice(0,240);
+async function loadNotes(){
+  if(nLoaded)renderNotes();else $("#nlist").innerHTML='<div class="sk"></div><div class="sk"></div><div class="sk"></div>';
+  try{
+    const r=await gh("GET",nbase());let fl=[];
+    if(r.ok){const d=await r.json();fl=Array.isArray(d)?d.filter(f=>f.type==="file"&&f.name.endsWith(".json")):[]}else if(r.status!==404)throw new Error(await ghErr(r));
+    const old=new Map(notes.map(n=>[n.id,n])),out=[];let i=0;
+    await Promise.all(Array.from({length:4},async()=>{while(i<fl.length){const f=fl[i++],id=f.name.slice(0,-5),o=old.get(id);
+      if(o&&(o.sha===f.sha||o._dirty)){out.push(o);continue}
+      try{const x=await gh("GET",npath(id),null,"application/vnd.github.raw+json");if(x.ok)out.push({...JSON.parse(await x.text()),id,sha:f.sha})}catch{}}}));
+    for(const o of notes)if(o._dirty&&!out.some(x=>x.id===o.id))out.push(o);
+    notes=out;nLoaded=true;
+  }catch(e){fail(e)}
+  renderNotes();
+}
+function renderNotes(){
+  const q=$("#nq").value.trim().toLocaleLowerCase("tr");
+  const v=notes.filter(n=>!nDel.has(n.id)&&(!q||((n.t||"")+" "+(n.b||"")).toLocaleLowerCase("tr").includes(q))).sort((a,b)=>(b.p?1:0)-(a.p?1:0)||(b.u||0)-(a.u||0));
+  $("#nlist").innerHTML=v.length?v.map((n,i)=>`<article class="nc" tabindex="0" role="button" data-id="${E(n.id)}" style="--nc:${n.c||"var(--cd)"};--d:${Math.min(i,12)*40}ms">${n.p?`<span class="np">${ic("pin",1)}</span>`:""}<b>${E(n.t||"Başlıksız")}</b><p>${E(prev(n.b))}</p>${n.f?`<small>📎 ${E(shown(n.f))}</small>`:""}<small>${new Date(n.u||Date.now()).toLocaleDateString("tr-TR")}</small></article>`).join(""):`<div class="empty" style="grid-column:1/-1"><b>${nLoaded?"Not yok":"Yükleniyor…"}</b>${nLoaded?"Yeni not için + düğmesine dokun.":""}</div>`;
+}
+function newNote(f){openNote({id:nid(),t:"",b:"",c:"",p:0,f:f||"",u:Date.now()})}
+function openNote(n){if(!n)return;cur=n;n._dirty=0;$("#nt").value=n.t||"";$("#nb").value=n.b||"";nUI();$("#nst").textContent=n.sha?"Kaydedildi":"Yeni not";$("#nd").showModal();if(!n.sha&&!n.t&&!n.b)setTimeout(()=>$("#nt").focus(),80)}
+function nUI(){$("#nsw").innerHTML=NC.map(c=>`<button type="button" class="sw${(cur.c||"")===c?" on":""}" data-c="${c}" style="--c:${c||"var(--cd)"}" aria-label="Renk"></button>`).join("");$("#ndp").classList.toggle("on",!!cur.p)}
+function sched(){cur._dirty=1;$("#nst").textContent="Yazılıyor…";clearTimeout(dTm);dTm=setTimeout(flushNote,1200)}
+function flushNote(){clearTimeout(dTm);const n=cur;if(!n||!n._dirty)return sv;n._dirty=0;n.u=Date.now();return sv=sv.then(()=>persistNote(n))}
+async function persistNote(n){
+  if(!n.t&&!n.b&&!n.sha)return;
+  if(cur===n)$("#nst").textContent="Kaydediliyor…";
+  const body={message:"Not: "+(n.t||n.id),content:b2s(te.encode(JSON.stringify({t:n.t,b:n.b,c:n.c,p:n.p,f:n.f,u:n.u})))};if(n.sha)body.sha=n.sha;
+  for(let t=0;t<3;t++){
+    try{
+      const r=await gh("PUT",npath(n.id),body);
+      if(r.ok){n.sha=(await r.json()).content.sha;const ix=notes.findIndex(x=>x.id===n.id);ix<0?notes.push(n):notes[ix]=n;if(cur===n)$("#nst").textContent="Kaydedildi";return}
+      if(r.status===409||r.status===422){const g=await gh("GET",npath(n.id));if(g.ok)body.sha=(await g.json()).sha;else delete body.sha;await wait(500*(t+1));continue}
+      throw new Error(await ghErr(r));
+    }catch(e){if(t===2||/^(401|403)/.test(e.message)){n._dirty=1;if(cur===n)$("#nst").textContent="Kaydedilemedi, tekrar denenecek";fail(e);return}await wait(900*(t+1))}
+  }
+}
+$("#nt").oninput=()=>{cur.t=$("#nt").value;sched()};$("#nb").oninput=()=>{cur.b=$("#nb").value;sched()};
+$("#nsw").onclick=e=>{const b=e.target.closest("[data-c]");if(!b)return;cur.c=b.dataset.c;nUI();sched()};
+$("#ndp").onclick=()=>{cur.p=cur.p?0:1;nUI();sched()};$("#ndx").onclick=()=>$("#nd").close();
+$("#nd").onclose=async()=>{await flushNote();await sv;cur=null;renderNotes()};
+$("#ndd").onclick=()=>{const n=cur;if(!n)return;cur=null;clearTimeout(dTm);n._dirty=0;$("#nd").close();if(!n.sha)return renderNotes();
+  nDel.add(n.id);renderNotes();let u=0;
+  toast("Not silindi","",{label:"Geri al",fn:()=>{u=1;nDel.delete(n.id);renderNotes()}},5000);
+  setTimeout(()=>{if(!u)sv=sv.then(()=>delNote(n))},5300)};
+async function delNote(n){try{const r=await gh("DELETE",npath(n.id),{message:"Not sil: "+(n.t||n.id),sha:n.sha});if(!r.ok&&r.status!==404)throw new Error(await ghErr(r));notes=notes.filter(x=>x.id!==n.id)}catch(e){fail(e)}finally{nDel.delete(n.id);renderNotes()}}
+$("#nlist").onclick=e=>{const c=e.target.closest(".nc");if(c)openNote(notes.find(n=>n.id===c.dataset.id))};
+$("#nlist").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){const c=e.target.closest(".nc");if(c){e.preventDefault();c.click()}}};
+$("#list").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.classList.contains("it"))e.target.click()});
+$("#nq").oninput=renderNotes;
+function sharedNote(s){const n={id:nid(),t:s.title||"Paylaşılan",b:[s.text,s.url].filter(Boolean).join("\n"),c:"",p:0,f:"",u:Date.now()};notes.push(n);sv=sv.then(()=>persistNote(n)).then(()=>{toast("Paylaşılan metin not olarak kaydedildi");if(view_==="notes")renderNotes()})}
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&cur&&cur._dirty)flushNote()});
+addEventListener("pagehide",()=>{if(cur&&cur._dirty)flushNote()});
+addEventListener("online",()=>{if(cur&&cur._dirty)flushNote()});
+addEventListener("beforeunload",e=>{if(pend.size||running||(cur&&cur._dirty)){e.preventDefault();e.returnValue=""}});
+
+/* ===== uygulama yükleme çubuğu ===== */
+function ibShow(){if(standalone||ls.get("dk-ib")||!cfg)return;$("#inb").hidden=false}
+$("#inbi").onclick=async()=>{if(dip){dip.prompt();await dip.userChoice;dip=null;$("#inb").hidden=true}else toast("Safari'de Paylaş simgesine dokun, sonra “Ana Ekrana Ekle”yi seç","",null,8000)};
+$("#inbx").onclick=()=>{ls.set("dk-ib","1");$("#inb").hidden=true};
 
 /* başlangıç */
 async function enter(){
   show("files");const p=new URLSearchParams(location.search);
   if(p.has("shared")){
-    try{const c=await caches.open("dk-share"),fs=[];
-      for(const k of await c.keys()){const r=await c.match(k),b=await r.blob();fs.push(new File([b],decodeURIComponent(r.headers.get("x-name")||"dosya"),{type:b.type}));await c.delete(k)}
-      if(fs.length)addFiles(fs)}catch{}
+    try{const c=await caches.open("dk-share"),fs=[];let st=null;
+      for(const k of await c.keys()){const r=await c.match(k);
+        if(r.headers.get("x-text"))st=await r.json();
+        else{const b=await r.blob();fs.push(new File([b],decodeURIComponent(r.headers.get("x-name")||"dosya"),{type:b.type}))}
+        await c.delete(k)}
+      if(fs.length){addFiles(fs);toast(fs.length+" dosya paylaşımdan alındı")}if(st)sharedNote(st)}catch{}
   }
   if(p.get("a")==="upload"||p.get("a")==="camera")$("#up").showModal();
+  if(p.get("a")==="note"){show("notes");newNote()}
+  if(isIOS||dip)ibShow();
   if([...p].length)history.replaceState(null,"",location.pathname);
 }
 function fromHash(){
   const h=parseQr(location.href);if(!h)return null;
   history.replaceState(null,"",location.pathname+location.search);return h}
 async function resume(c){
-  const old=rd(localStorage,"dk-list"),cached=old&&old.repo===c.repo&&old.folder===c.folder;
+  const old=rd(LST,"dk-list"),cached=old&&old.repo===c.repo&&old.folder===c.folder;
   if(cached){cfg=c;items=old.items;enter()}
   const ok=await connect(c);
-  if(ok){try{localStorage.setItem("dk-list",JSON.stringify({repo:c.repo,folder:c.folder,items}))}catch{}if(cached)render();else enter()}
+  if(ok){cacheList();if(cached)render();else enter()}
   else if(cached&&/ulaşılamadı/.test($("#err").textContent)){toast("Çevrimdışısın, son kaydedilen liste gösteriliyor","bad")}
   else{cfg=null;show("setup");$("#repo").value=c.repo;$("#folder").value=c.folder}}
 
@@ -693,12 +814,12 @@ async function resume(c){
   if(h){busyOn("Bağlanılıyor…","QR ile giriş",true);let ok=false;try{ok=await connect(h.c)}finally{busyOff()}
     if(ok){persist=h.perm;await saveCfg();enter();toast(h.perm?"Bağlandı · bu cihazda kalıcı":"Bağlandı · tarayıcı kapanınca silinir");return}
     const m=$("#err").textContent;show("setup");$("#repo").value=h.c.repo;$("#folder").value=h.c.folder;$("#err").textContent=m;$("#err").hidden=false;toast(m,"bad");return}
-  const ss=rd(sessionStorage,LS),raw=ss||rd(localStorage,LS);persist=!ss;
+  const ss=rd(SST,LS),raw=ss||rd(LST,LS);persist=!ss;
   if(!raw)return show("setup");
   if(raw.enc){
     $("#lock").hidden=false;$("#pin").focus();
     $("#lf").onsubmit=async e=>{e.preventDefault();const p=$("#pin").value;let tok;
-      try{tok=await unseal(p,raw.enc)}catch{$("#lerr").textContent="PIN yanlış";$("#lerr").hidden=false;$("#pin").value="";return}
+      try{tok=await unseal(p,raw.enc)}catch{window._f=(window._f||0)+1;const bt=$("#lf button.pri");bt.disabled=true;await wait(Math.min(8000,400*2**window._f));bt.disabled=false;$("#lerr").textContent="PIN yanlış";$("#lerr").hidden=false;$("#pin").value="";return}
       curPin=p;$("#lock").hidden=true;$("#pin").value="";resume({repo:raw.repo,folder:raw.folder,token:tok})};
     return}
   resume({repo:raw.repo,folder:raw.folder,token:raw.tok});
