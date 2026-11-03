@@ -1,4 +1,4 @@
-const V = "dk-v11", SHARE = "dk-share", SHELL = ["./", "index.html"];
+const V = "dk-v14", SHARE = "dk-share", SHELL = ["./", "index.html"];
 
 self.addEventListener("install", e => {
   e.waitUntil(
