@@ -321,6 +321,23 @@ input[type=text],input[type=password],input[type=search],input[type=date],select
 .aud .art{width:120px;height:120px;border-radius:28px;display:grid;place-items:center;background:#13201f;color:var(--ac)}
 .aud b{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .aud audio{width:100%}
+
+/* ===== v5 ===== */
+.ngrid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.nc{min-width:0}
+.nc b{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+.nti span{flex:1;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nti .nck{margin-top:1px}
+.nc p{-webkit-line-clamp:6}
+.nrow{align-items:flex-start}
+.nrow .nck{margin-top:11px}
+.nrow textarea{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--tx);font:inherit;font-size:16px;line-height:1.4;padding:8px 0;resize:none;overflow:hidden;min-height:0;box-shadow:none!important;word-break:break-word}
+.nrow.dn textarea{text-decoration:line-through;color:var(--mu)}
+.nrow .nx{margin-top:4px}
+.nh{touch-action:none;cursor:grab;color:var(--mu);border:0;background:none;min-height:0;min-width:0;padding:8px 2px;margin-top:3px;font-size:18px;line-height:1;user-select:none;-webkit-user-select:none}
+.nrow.drag{background:var(--as);border-radius:10px;box-shadow:var(--sh);position:relative;z-index:2}
+.nfmt{display:flex;gap:8px;padding:0 18px 8px;flex-wrap:wrap}.nfmt[hidden]{display:none}
+.nfmt button{min-height:0;padding:6px 12px;font-size:13px;border-radius:10px}
 </style>
 </head>
 <body>
@@ -416,7 +433,9 @@ input[type=text],input[type=password],input[type=search],input[type=date],select
 <dialog id="nd" aria-label="Not düzenle">
   <div class="ph"><button class="ib" id="ndx" aria-label="Kapat">‹</button><b id="nst">Yeni not</b><button class="ib" id="ndp" aria-label="Sabitle"><span data-ic="pin"></span></button><button class="ib dn" id="ndd" aria-label="Sil"><span data-ic="tr"></span></button></div>
   <input id="nt" type="text" placeholder="Başlık" autocomplete="off" aria-label="Başlık">
+  <div class="nfmt" id="nfmt"><button type="button" data-p="- ">• Madde</button><button type="button" data-p="1. ">1. Numaralı</button><button type="button" data-p="- [ ] ">☐ Kutucuk</button></div>
   <textarea id="nb" placeholder="Notunu yaz…  (&quot;- [ ] &quot; ile yapılacak listesi)" aria-label="Not"></textarea>
+  
   <div id="ntl" hidden><div id="nti"></div><div class="nadd"><input id="nan" type="text" placeholder="Yeni görev yaz, Enter’a bas" autocomplete="off" aria-label="Yeni görev"><button type="button" class="pri" id="nab">Ekle</button></div><div class="nmeta"><label>Bitiş tarihi <input id="ndu" type="date"></label><button type="button" id="ncl">Bitenleri sil</button></div></div>
   <div class="swr" id="nsw"></div>
 </dialog>
@@ -1165,7 +1184,7 @@ function cacheList(){try{if(curPin)LST.removeItem("dk-list");else LST.setItem("d
 let notes=[],nLoaded=false,cur=null,sv=Promise.resolve(),dTm=0;const nDel=new Set();
 const NC=["","#fbbf24","#4ade80","#38bdf8","#f472b6","#a78bfa"],nid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const nbase=()=>base()+"/.notlar",npath=id=>nbase()+"/"+id+".json";
-const prev=b=>(b||"").replace(/^- \[ \] /gm,"☐ ").replace(/^- \[[xX]\] /gm,"☑ ").slice(0,240);
+const prev=b=>(b||"").replace(/^- \[ \] /gm,"☐ ").replace(/^- \[[xX]\] /gm,"☑ ").replace(/^- /gm,"• ").slice(0,240);
 async function loadNotes(){
   if(nLoaded)renderNotes();else $("#nlist").innerHTML='<div class="sk"></div><div class="sk"></div><div class="sk"></div>';
   try{
@@ -1230,15 +1249,40 @@ $("#nlist").onclick=e=>{const c=e.target.closest(".nc");if(!c)return;const n=not
   const ck=e.target.closest("[data-ci]");
   if(ck){const it=n.i[+ck.dataset.ci];it.x=it.x?0:1;n.u=Date.now();n._dirty=1;clearTimeout(n._t);n._t=setTimeout(()=>{n._dirty=0;sv=sv.then(()=>persistNote(n))},900);renderNotes();return}
   openNote(n)};
-function nMode(){const tk=cur.k==="t";$("#nb").hidden=tk;$("#ntl").hidden=!tk;$("#nt").placeholder=tk?"Görev listesi başlığı":"Başlık";if(tk){drawItems();$("#nan").value=""}}
-function drawItems(){$("#nti").innerHTML=cur.i.map((x,j)=>`<div class="nrow${x.x?" dn":""}" data-j="${j}"><input class="nck" type="checkbox"${x.x?" checked":""} aria-label="Tamamlandı"><input type="text" value="${E(x.d)}" placeholder="Görev" aria-label="Görev"><button type="button" class="nx" aria-label="Sil">✕</button></div>`).join("");$("#ndu").value=cur.dd||""}
+function nMode(){const tk=cur.k==="t";$("#nb").hidden=tk;$("#nfmt").hidden=tk;$("#ntl").hidden=!tk;$("#nt").placeholder=tk?"Görev listesi başlığı":"Başlık";if(tk){drawItems();$("#nan").value=""}}
+
+const fit=t=>{t.style.height="auto";t.style.height=t.scrollHeight+"px"};
+
+function drawItems(){$("#nti").innerHTML=cur.i.map((x,j)=>`<div class="nrow${x.x?" dn":""}" data-j="${j}"><button type="button" class="nh" aria-label="Sırala" tabindex="-1">⋮⋮</button><input class="nck" type="checkbox"${x.x?" checked":""} aria-label="Tamamlandı"><textarea rows="1" placeholder="Görev" aria-label="Görev">${E(x.d)}</textarea><button type="button" class="nx" aria-label="Sil">✕</button></div>`).join("");$("#ndu").value=cur.dd||"";requestAnimationFrame(()=>$$("#nti textarea").forEach(fit))}
+
 function addItem(){const v=$("#nan").value.trim();if(!v)return;cur.i.push({x:0,d:v});$("#nan").value="";drawItems();sched();$("#nan").focus()}
 $("#nti").addEventListener("change",e=>{const r=e.target.closest(".nrow");if(!r||!e.target.classList.contains("nck"))return;const x=cur.i[+r.dataset.j];x.x=e.target.checked?1:0;r.classList.toggle("dn",!!x.x);sched()});
-$("#nti").addEventListener("input",e=>{const r=e.target.closest(".nrow");if(r&&e.target.type==="text"){cur.i[+r.dataset.j].d=e.target.value;sched()}});
+$("#nti").addEventListener("input",e=>{const r=e.target.closest(".nrow");if(r&&e.target.tagName==="TEXTAREA"){cur.i[+r.dataset.j].d=e.target.value;fit(e.target);sched()}});
 $("#nti").addEventListener("click",e=>{if(e.target.classList.contains("nx")){cur.i.splice(+e.target.closest(".nrow").dataset.j,1);drawItems();sched()}});
 $("#nan").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();addItem()}};$("#nab").onclick=addItem;
 $("#ndu").onchange=()=>{cur.dd=$("#ndu").value;sched()};
 $("#ncl").onclick=()=>{cur.i=cur.i.filter(x=>!x.x);drawItems();sched()};
+$("#nti").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.tagName==="TEXTAREA"){e.preventDefault();$("#nan").focus()}});
+let dg=null;
+$("#nti").addEventListener("pointerdown",e=>{const h=e.target.closest(".nh");if(!h)return;e.preventDefault();h.setPointerCapture(e.pointerId);dg=h.closest(".nrow");dg.classList.add("drag")});
+$("#nti").addEventListener("pointermove",e=>{if(!dg)return;const p=dg.previousElementSibling,n=dg.nextElementSibling;
+  if(p){const b=p.getBoundingClientRect();if(e.clientY<b.top+b.height/2)p.before(dg)}
+  if(n){const b=n.getBoundingClientRect();if(e.clientY>b.top+b.height/2)n.after(dg)}
+  const c=$("#ntl"),cb=c.getBoundingClientRect();if(e.clientY<cb.top+40)c.scrollTop-=12;else if(e.clientY>cb.bottom-40)c.scrollTop+=12});
+const dEnd=()=>{if(!dg)return;dg.classList.remove("drag");dg=null;cur.i=[...$("#nti").children].map(x=>cur.i[+x.dataset.j]);drawItems();sched()};
+$("#nti").addEventListener("pointerup",dEnd);$("#nti").addEventListener("pointercancel",dEnd);
+const LR=/^(- \[[ xX]\] |- |\d+\. )/;
+$("#nfmt").onclick=e=>{const b=e.target.closest("[data-p]");if(!b)return;const p=b.dataset.p,t=$("#nb"),v=t.value,s0=t.selectionStart,e0=t.selectionEnd;
+  const a=s0?v.lastIndexOf("\n",s0-1)+1:0;let z=v.indexOf("\n",e0);if(z<0)z=v.length;
+  const L=v.slice(a,z).split("\n"),same=L.every(l=>{const m=l.match(LR);return m&&(p==="1. "?/^\d/.test(m[0]):m[0].replace(/[xX]/,"  ").replace("  "," ")===p)});
+  const out=L.map((l,i)=>{l=l.replace(LR,"");return same?l:(p==="1. "?(i+1)+". ":p)+l}).join("\n");
+  t.value=v.slice(0,a)+out+v.slice(z);t.setSelectionRange(a,a+out.length);cur.b=t.value;sched();t.focus()};
+$("#nb").addEventListener("beforeinput",e=>{if(e.inputType!=="insertLineBreak"&&e.inputType!=="insertParagraph")return;const t=e.target,s0=t.selectionStart;if(s0!==t.selectionEnd)return;
+  const v=t.value,a=s0?v.lastIndexOf("\n",s0-1)+1:0,line=v.slice(a,s0),m=line.match(LR);if(!m)return;e.preventDefault();
+  if(line===m[0])t.setRangeText("",a,s0,"end");
+  else t.setRangeText("\n"+(/^\d/.test(m[0])?(parseInt(m[0])+1)+". ":m[0].startsWith("- [")?"- [ ] ":"- "),s0,s0,"end");
+  cur.b=t.value;sched()});
+
 $("#ntask").onclick=()=>newNote("t");
 $("#nf").onclick=e=>{const b=e.target.closest("[data-f]");if(!b)return;nFil=b.dataset.f;$$("#nf button").forEach(x=>x.classList.toggle("on",x===b));window._ng="";renderNotes()};
 $("#nlist").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){const c=e.target.closest(".nc");if(c){e.preventDefault();c.click()}}};
